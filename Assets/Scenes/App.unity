@@ -230,7 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameUIPrefab: {fileID: 5716001437563551633, guid: 38daf12653e71f64ea337eb44d9e74d2, type: 3}
   _loadingUIView: {fileID: 1055454936757437119, guid: 36c2f25b7358dfb409166ab974db70ce, type: 3}
-  _gameViewPrefab: {fileID: 6224299546081789974, guid: 8d5a5307682e95c409471ca86c8a61e8, type: 3}
+  _gameViewPrefab: {fileID: 7076283901716735850, guid: 47fc89390e0ba9a418119d841f1c011b, type: 3}
   _mainMenuUIPrefab: {fileID: 6224299546081789974, guid: 9c7c6e82a114fdb4f87111e70b107097, type: 3}
   _gameResources: {fileID: 11400000, guid: 1dad2632e6251d143b99f4c0a01e91b8, type: 2}
 --- !u!114 &1004261691
@@ -256,7 +256,7 @@ Transform:
   m_GameObject: {fileID: 1004261689}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 370.97968, y: -302.9568, z: 215.74551}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -290,6 +290,7 @@ GameObject:
   - component: {fileID: 1013854745}
   - component: {fileID: 1013854744}
   - component: {fileID: 1013854743}
+  - component: {fileID: 1013854746}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -364,13 +365,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013854742}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.19927023, y: -0, z: -0, w: 0.9799446}
+  m_LocalPosition: {x: 0, y: 4.4, z: -11.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 22.989, y: 0, z: 0}
+--- !u!114 &1013854746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013854742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea31351f8c16a134abdd59d7d60cdeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1102499534
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,28 +535,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1777358412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SendPointerHoverToParent: 1
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
-  m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
-  m_CursorLockBehavior: 0
-  m_ScrollDeltaPerTick: 6
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1 &1938034650
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +683,7 @@ Canvas:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1013854745}
   - {fileID: 1102499536}
+  - {fileID: 1013854745}
   - {fileID: 1004261692}
   - {fileID: 1777358415}

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponList:
   - {fileID: 0}
+  _playerPrefabs: {fileID: 8651241930869293101, guid: c58cf1a8413347148948161d01085a2a, type: 3}
