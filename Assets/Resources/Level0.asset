@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c057a70f7d5ff1e4485c719fa7739b89, type: 3}
-  m_Name: GameResources
+  m_Script: {fileID: 11500000, guid: 5c97c35767a40bb49917a6721ad5cee0, type: 3}
+  m_Name: Level0
   m_EditorClassIdentifier: 
-  _followCameraSmootTime: 0.2
-  _playerBaseSpeed: 5
-  _weaponList:
-  - {fileID: 0}
-  _playerPrefabs: {fileID: 8651241930869293101, guid: c58cf1a8413347148948161d01085a2a, type: 3}
+  id: 0

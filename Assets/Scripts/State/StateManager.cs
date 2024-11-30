@@ -2,12 +2,18 @@ using System.Collections.Generic;
 
 public class StateManager : IStateManager
 {
+    #region Public Members
     //  MEMBERS
     public string CurrentState { get; private set; }
     public string TransitionState { get; private set; }
 
-    //      Private
+    #endregion
+
+    #region Private Members    
+
     private Dictionary<string, AStateBase> _gameStates;
+
+    #endregion
 
     //  CONSTRUCTION
     public StateManager()
@@ -17,7 +23,8 @@ public class StateManager : IStateManager
         _gameStates = new Dictionary<string, AStateBase>();
     }
 
-    //  METHODS
+    #region Public Methos
+   
     public void AddStates(AStateBase stateHandler)
     {
         _gameStates.Add(stateHandler.name, stateHandler);
@@ -63,4 +70,6 @@ public class StateManager : IStateManager
             _gameStates[CurrentState].Activate();
         }
     }
+
+    #endregion
 }
