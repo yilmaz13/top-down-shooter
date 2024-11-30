@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class AppContext : MonoBehaviour
 {
+    #region Variables
+
     [Header("References")]
     [SerializeField] private SceneReferences _sceneReferences;
     [SerializeField] private ResourceReferences _resourceReferences;
@@ -10,10 +12,10 @@ public class AppContext : MonoBehaviour
     private StateManager _stateManager;
     private UserDataManager _userDataManager;
 
-    void Start()
-    {
-       // _popupManager.Initialize();
+    #endregion
 
+    void Start()
+    {      
         _stateManager = new StateManager();
         _userDataManager = new UserDataManager();
        

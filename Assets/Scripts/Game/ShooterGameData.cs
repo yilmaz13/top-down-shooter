@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ShooterGameData
 {
+    #region Public Methos
     public void Load()
     {
 
@@ -10,4 +11,5 @@ public class ShooterGameData
     {
 
     }
+    #endregion
 }

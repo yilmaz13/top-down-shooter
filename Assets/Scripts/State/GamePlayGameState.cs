@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
 
 public class GamePlayGameState : AStateBase,
                                  IShooterGameListener
 {
+    #region Private Members    
+
     IStateManager _stateManager;
     IUserDataManager _userDataManager;
     SceneReferences _sceneReferences;
@@ -15,8 +17,13 @@ public class GamePlayGameState : AStateBase,
     private ShooterGameController _shooterController;
     private CameraController _cameraController;
 
+    private GameResources _gameResources;
     private Level _level;
     private bool _startedGame;
+
+    #endregion
+
+    //  CONSTRUCTION
     public GamePlayGameState(IStateManager      stateManager,
                              IUserDataManager   userDataManager,   
                              SceneReferences    sceneReferences,
@@ -26,8 +33,10 @@ public class GamePlayGameState : AStateBase,
         _userDataManager = userDataManager;
         _sceneReferences = sceneReferences;
         _resourceReferences = resourceReferences;
+        _gameResources = _resourceReferences.GameResources;
     }
 
+    #region State Methos
     public override void Activate()
     {
         Debug.Log("<color=green>GameplayGame State</color> OnActive");
@@ -54,6 +63,9 @@ public class GamePlayGameState : AStateBase,
     {      
     }
 
+    #endregion
+
+    #region Private Methos
     private void SpawnViewandControler()
     {
         _camera = _sceneReferences.MainCam;
@@ -79,7 +91,7 @@ public class GamePlayGameState : AStateBase,
 
     private void FollowCameraPlayer(Transform playerTranfrom)
     {
-        _cameraController.Initialize(playerTranfrom);
+        _cameraController.Initialize(playerTranfrom, _gameResources.FollowCameraSmootTime);
     }
 
     private void PlayLevel()
@@ -91,8 +103,6 @@ public class GamePlayGameState : AStateBase,
         _level.CopyLevel(_level, currentLevelTemplate);
 
         _shooterController.Load(_level);
-
-        _shooterController.StartGame();
         
         _startedGame = true;
 
@@ -102,10 +112,8 @@ public class GamePlayGameState : AStateBase,
     private void SubscribeEvents()
     {
         GameEvents.OnStartGame += StartGameListener;
-        GameEvents.OnEndGame += EndGameListener;
-        GameEvents.OnClickLevelNext += PlayNextLevel;
-        GameEvents.OnClickGotoMenu += GotoMenu;
-        GameEvents.OnClickLevelRestart += RestartLevel;
+        GameEvents.OnEndGame += EndGameListener;    
+        GameEvents.OnClickGotoMenu += GotoMenu;      
 
         GameEvents.OnSpawnedPlayer += FollowCameraPlayer;
     }
@@ -113,10 +121,8 @@ public class GamePlayGameState : AStateBase,
     private void UnsubscribeEvents()
     {
         GameEvents.OnStartGame -= StartGameListener;
-        GameEvents.OnEndGame -= EndGameListener;
-        GameEvents.OnClickLevelNext -= PlayNextLevel;
-        GameEvents.OnClickGotoMenu -= GotoMenu;
-        GameEvents.OnClickLevelRestart -= RestartLevel;
+        GameEvents.OnEndGame -= EndGameListener;     
+        GameEvents.OnClickGotoMenu -= GotoMenu;     
 
         GameEvents.OnSpawnedPlayer -= FollowCameraPlayer;
     }
@@ -127,25 +133,13 @@ public class GamePlayGameState : AStateBase,
         _gameUIView.UnloadLevel();
         _gameUIView.Hide();
 
-        _shooterController.Unload();
-        _shooterController.EndPlay();
+        _shooterController.Unload();       
     }
     private void GotoMenu()
     {
         ClearScene();
         _stateManager.ChangeTransitionState(StateNames.Loading, StateNames.MainMenu);
     }
-    private void RestartLevel()
-    {
-        ClearScene();
-        PlayLevel();
-    }
-    private void PlayNextLevel()
-    {
-        ClearScene();
-        PlayLevel();
-    }
-
 
     private void EndGameListener(bool success)
     {
@@ -154,12 +148,12 @@ public class GamePlayGameState : AStateBase,
 
         if (success)
         {
-            //LevelSuccessPopup           
+            //LevelSuccess
             _startedGame = false;
         }
         else
         {
-            //LevelFailPopup          
+            //LevelFail
             _startedGame = false;
         }
     }
@@ -168,4 +162,5 @@ public class GamePlayGameState : AStateBase,
     {
 
     }
+    #endregion
 }

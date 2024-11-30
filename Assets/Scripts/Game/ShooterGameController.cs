@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ShooterGameController : IShooterGameViewListener
 {
+    #region Private Members    
+
     private ShooterGameData _data;
     private ShooterGameView _view;
     private GameUIView _gameUIView;
@@ -12,6 +14,10 @@ public class ShooterGameController : IShooterGameViewListener
 
     //  private EnemyController _enemyController;
     private Camera _camera;
+
+    #endregion
+
+    //  CONSTRUCTION
     public ShooterGameController()
     {
         _data = new ShooterGameData();
@@ -25,6 +31,20 @@ public class ShooterGameController : IShooterGameViewListener
         _view = view;
     }
 
+    #region Private Methods    
+    private void SpawnPlayer()
+    {
+        GameObject playerObject = GameObject.Instantiate(_gameResources.PlayerPrefabs(), _view.PlayerSpawnPoint);
+        var playerView = playerObject.GetComponent<PlayerView>();
+
+        _playerController = playerObject.GetComponent<PlayerController>();
+        _playerController.Initialize(playerView, _gameResources.PlayerBaseSpeed);
+
+        GameEvents.SpawnedPlayer(playerView.transform);
+    }
+    #endregion
+
+    #region Public Methods    
     public void Load(Level _level)
     {
         _data.Load();
@@ -32,24 +52,12 @@ public class ShooterGameController : IShooterGameViewListener
 
         SpawnPlayer();
     }
-
-    private void SpawnPlayer()
-    {
-        GameObject playerObject = GameObject.Instantiate(_gameResources.PlayerPrefabs(), _view.PlayerSpawnPoint);
-        var playerView = playerObject.GetComponent<PlayerView>();
-
-        _playerController = playerObject.GetComponent<PlayerController>();
-        _playerController.Initialize(playerView);
-
-        GameEvents.SpawnedPlayer(playerView.transform);
-    }
     public void Unload()
     {
         _data.Unload();
         _view.Clear();
-    }
+    }  
 
-    public void StartGame() { }
-    public void EndPlay() { }
+    #endregion
 
 }
