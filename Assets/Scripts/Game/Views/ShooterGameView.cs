@@ -7,11 +7,13 @@ public class ShooterGameView : MonoBehaviour
     public string CurrentState { get; private set; }
     public string TransitionState { get; private set; }
     public Transform PlayerSpawnPoint => _playerSpawnPoint;
+    public List<Transform> EnemySpawnPoints => _enemySpawnPoints;
     #endregion
 
     #region Private Members    
 
     [SerializeField] private Transform _playerSpawnPoint;
+    [SerializeField] private List<Transform> _enemySpawnPoints;
 
     private Dictionary<string, AStateBase> _gameStates;   
     private IShooterGameViewListener _listener;
