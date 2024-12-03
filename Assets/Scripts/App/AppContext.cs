@@ -10,8 +10,7 @@ public class AppContext : MonoBehaviour
 
     //      Private
     private StateManager _stateManager;
-    private UserDataManager _userDataManager;
-
+    private UserDataManager _userDataManager;  
     #endregion
 
     void Start()
