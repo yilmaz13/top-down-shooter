@@ -21,6 +21,10 @@ public class GamePlayGameState : AStateBase,
     private Level _level;
     private bool _startedGame;
 
+    //Pool
+
+    private ProjectilePool _projectilePool;
+
     #endregion
 
     //  CONSTRUCTION
@@ -42,7 +46,7 @@ public class GamePlayGameState : AStateBase,
         Debug.Log("<color=green>GameplayGame State</color> OnActive");
 
         SpawnViewandControler();
-
+        
         _shooterGameView.Show();
 
         SubscribeEvents();
@@ -60,7 +64,8 @@ public class GamePlayGameState : AStateBase,
     }
 
     public override void UpdateState()
-    {      
+    {
+        Debug.Log(_shooterGameView.PlayerSpawnPoint.position);
     }
 
     #endregion
@@ -81,6 +86,12 @@ public class GamePlayGameState : AStateBase,
             _shooterGameView.Initialize(_shooterController, Camera.main, _resourceReferences.GameResources);
 
             _shooterController.Initialize(_shooterGameView, _gameUIView, this, _resourceReferences.GameResources, _camera);
+        }
+
+        if (_projectilePool == null)
+        {
+            GameObject projectilePool = GameObject.Instantiate(_resourceReferences.ProjectilePoolPrefab, _sceneReferences.PoolContainer.transform);
+            _projectilePool = projectilePool.GetComponent<ProjectilePool>();            
         }
     }
 
