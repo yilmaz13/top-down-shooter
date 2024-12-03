@@ -12,6 +12,9 @@ public class GameResources : ScriptableObject
     [Header("Prefabs")]
     [SerializeField] private List<GameObject> _weaponList;
     [SerializeField] private GameObject _playerPrefabs;
+    [SerializeField] private GameObject _enemyPrefabs;
+    [SerializeField] private GameObject _healthSliderPrefabs;
+    [SerializeField] private GameObject _armorSliderPrefabs;
 
     public float FollowCameraSmootTime => _followCameraSmootTime;
     public float PlayerBaseSpeed => _playerBaseSpeed;
@@ -28,5 +31,18 @@ public class GameResources : ScriptableObject
     public GameObject PlayerPrefabs()
     {
         return _playerPrefabs;
+    }   
+    
+    public GameObject EnemyPrefabs()
+    {
+        return _enemyPrefabs;
+    } 
+    public GameObject HealthSliderPrefabs()
+    {
+        return _healthSliderPrefabs;
+    }
+    public GameObject ArmorSliderPrefabs()
+    {
+        return _armorSliderPrefabs;
     }
 }

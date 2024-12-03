@@ -17,3 +17,6 @@ MonoBehaviour:
   _weaponList:
   - {fileID: 0}
   _playerPrefabs: {fileID: 8651241930869293101, guid: c58cf1a8413347148948161d01085a2a, type: 3}
+  _enemyPrefabs: {fileID: 2599931490434102315, guid: 63a9f453f8c268e4d9c2f63b57b1403a, type: 3}
+  _healthSliderPrefabs: {fileID: 0}
+  _armorSliderPrefabs: {fileID: 0}
