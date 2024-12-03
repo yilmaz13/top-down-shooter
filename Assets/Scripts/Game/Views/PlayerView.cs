@@ -1,20 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerView : MonoBehaviour
-{   
-    private Rigidbody _rigidbody;
+{
+    [SerializeField] private Transform _healthSliderPoint;
+    [SerializeField] private Transform _armorSliderPoint; 
+    [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private Camera    _camera;
     private float _speed;
 
-    void Start()
+    private SliderView healthView;
+    private SliderView armorView;
+    private float turnSmoothVelocity;
+    public void Initialize(float speed, Camera camera)
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    public void Initialize(float speed)
-    {
-        _speed = speed;
+        _speed  = speed;
+        _camera = camera;
     }
     public void Move()
     {
@@ -23,19 +26,62 @@ public class PlayerView : MonoBehaviour
     }
     public void LookAtMouse()
     {
-        Vector2 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 playerScreenPosition = _camera.WorldToScreenPoint(transform.position);
+        Vector2 mouseScreenPosition = Input.mousePosition;        
+        Vector2 directionToMouse = mouseScreenPosition - playerScreenPosition;
 
-        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        float rayLength;
-
-        if (groundPlane.Raycast(cameraRay, out rayLength))
+        Vector3 worldDirection = new Vector3(directionToMouse.x, 0, directionToMouse.y);
+        worldDirection = Quaternion.Euler(0, -90, 0) * worldDirection;
+     
+        if (worldDirection != Vector3.zero)
         {
-            Vector3 pointToLook = cameraRay.GetPoint(rayLength);
-            Debug.DrawLine(cameraRay.origin, pointToLook, Color.yellow);
+            Quaternion targetRotation = Quaternion.LookRotation(worldDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }  
 
-            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
-        }      
+    public void InitializeHealthBar(float health, float maxHealth)
+    {
+        healthView = Instantiate(Resources.Load<SliderView>("Prefabs/HpSliderParent"), _healthSliderPoint);
+        healthView.Initialize(Color.red);
+        healthView.UpdateValue(health, maxHealth);
     }
+
+    public void InitializeArmorBar(float armor, float maxArmor)
+    {
+        armorView = Instantiate(Resources.Load<SliderView>("Prefabs/ArmorSliderParent"), _armorSliderPoint);
+        armorView.Initialize(Color.blue);
+        armorView.UpdateValue(armor, maxArmor);
+    }
+    public void UpdateHealthBar(float health, float maxHealth)
+    {        
+        healthView.UpdateValue(health, maxHealth);
+    }
+
+    public void UpdateArmorBar(float armor, float maxArmor)
+    {
+       armorView.UpdateValue(armor, maxArmor);
+    }
+
+    public void TurnSlidersAtCamera()
+    {
+        healthView.LookAtPosition(_camera.transform);
+        armorView.LookAtPosition(_camera.transform);
+    }
+
+    public void Dead()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Respawn()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Transfer(Vector3 vector3)
+    { 
+        transform.position = vector3;
+    }
+
 }
