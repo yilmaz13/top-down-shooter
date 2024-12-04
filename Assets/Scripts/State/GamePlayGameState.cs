@@ -64,8 +64,7 @@ public class GamePlayGameState : AStateBase,
     }
 
     public override void UpdateState()
-    {
-        Debug.Log(_shooterGameView.PlayerSpawnPoint.position);
+    {        
     }
 
     #endregion

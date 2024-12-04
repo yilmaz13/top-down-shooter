@@ -9,16 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94aadfcba7b32984687c1cb4d8087e83, type: 3}
-  m_Name: EnemyWeaponSO
+  m_Script: {fileID: 11500000, guid: 9c78a90562011b04f87a7715ca06f7eb, type: 3}
+  m_Name: ScopeUpgradeData
   m_EditorClassIdentifier: 
-  _weaponType: 1
-  _speed: 20
-  _damage: 100
-  _armorPenetration: 80
-  _range: 5
-  _fireRate: 0.2
-  _areaOfEffect: 0
-  _burstCount: 0
-  _burstDelay: 0
-  _upgrades: []
+  weaponUpgradeType: 0
+  value: 1.5

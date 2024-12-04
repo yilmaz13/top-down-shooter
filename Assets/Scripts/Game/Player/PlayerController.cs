@@ -7,12 +7,15 @@ public class PlayerController : MonoBehaviour,
 
     private IPlayerController _listener;
     private PlayerView _playerView;
-    public HealthController HealthController;
-    public ArmorController ArmorController;
-
     private bool _isActive;
     private float _playerBaseSpeed;
 
+    #endregion
+
+    #region Private Members
+
+    public HealthController HealthController;
+    public ArmorController ArmorController;
 
     #endregion
     public float PlayerSpeed => _playerBaseSpeed;
@@ -40,7 +43,6 @@ public class PlayerController : MonoBehaviour,
         
         _playerView.Move();
         _playerView.LookAtMouse();
-
         _playerView.TurnSlidersAtCamera();
     }
     public void ApplyDamage(float damage, float armorPenetration)
@@ -55,7 +57,6 @@ public class PlayerController : MonoBehaviour,
         _playerView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
         _playerView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
     }
-
     public Transform GetTransform()
     {
         return transform;

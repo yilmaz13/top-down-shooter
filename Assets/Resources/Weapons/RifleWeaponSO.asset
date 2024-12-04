@@ -17,7 +17,10 @@ MonoBehaviour:
   _damage: 25
   _armorPenetration: 25
   _range: 7
-  _fireRate: 10
+  _fireRate: 3
   _areaOfEffect: 0
   _burstCount: 3
   _burstDelay: 0.2
+  _upgrades:
+  - {fileID: 11400000, guid: c5a1d42e1811d7a4faddb09a2c5c418b, type: 2}
+  - {fileID: 11400000, guid: b78d9cc136b07f64a81756c0c479420c, type: 2}
