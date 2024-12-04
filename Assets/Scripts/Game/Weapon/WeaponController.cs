@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
     [SerializeField] private Transform _firePoint;
-    [SerializeField] private Weapon[] weapons;
-    private int currentWeaponIndex = 0;
+    [SerializeField] private Weapon[] _weapons;
+    private int _currentWeaponIndex = 0;
     private Owner _owner; 
     void Start()
     {
-        foreach (var weapon in weapons)
+        foreach (var weapon in _weapons)
         {
             weapon.firePoint = _firePoint;
         }
@@ -18,14 +16,14 @@ public class WeaponController : MonoBehaviour
 
         _owner= Owner.Player;
 
-
+        SubscribeEvents();
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            weapons[currentWeaponIndex].Shoot(_owner);
+            _weapons[_currentWeaponIndex].TryShoot(_owner);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -44,18 +42,40 @@ public class WeaponController : MonoBehaviour
 
     void SwitchWeapon(int index)
     {
-        if (index >= 0 && index < weapons.Length)
+        if (index >= 0 && index < _weapons.Length)
         {
-            currentWeaponIndex = index;
-            for (int i = 0; i < weapons.Length; i++)
+            _currentWeaponIndex = index;
+            for (int i = 0; i < _weapons.Length; i++)
             {
-                weapons[i].gameObject.SetActive(i == currentWeaponIndex);
+                _weapons[i].gameObject.SetActive(i == _currentWeaponIndex);
             }
         }
     }
 
+    private void SubscribeEvents()
+    {
+        GameEvents.OnPlayerDead += ClearWeaponUpgrade;
+    }
+
+    private void UnsubscribeEvents()
+    {
+        GameEvents.OnPlayerDead -= ClearWeaponUpgrade;
+    }
+
+    private void ClearWeaponUpgrade()
+    {
+        foreach (var weapon in _weapons)
+        {
+            weapon.ResetUpgrades();
+        }
+    }
     public Weapon GetCurrentWeapon()
     {
-        return weapons[currentWeaponIndex];
+        return _weapons[_currentWeaponIndex];
     }
+    public void ApplyUpgrade(WeaponUpgradeData upgradeData)
+    {
+        GetCurrentWeapon().ApplyUpgrade(upgradeData);
+    }
+
 }

@@ -1,5 +1,4 @@
 using System;
-
 public class HealthController
 {
     #region Private Members

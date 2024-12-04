@@ -15,12 +15,9 @@ public class ShooterGameController : IShooterGameViewListener,
 
     private PlayerController _playerController;
     private List<EnemyController> _enemyController;
-
-    //  private EnemyController _enemyController;
     private Camera _camera;
 
-
-    public ShooterGameView View => _view;  
+    public ShooterGameView View => _view;
     #endregion
 
     //  CONSTRUCTION
@@ -63,10 +60,22 @@ public class ShooterGameController : IShooterGameViewListener,
             var enemyController = enemyObject.GetComponent<EnemyController>();
             var enemyView = enemyObject.GetComponent<EnemyView>();
             enemyController.Initialize(playerTransform, enemyView);
-            
+
             _enemyController.Add(enemyController);
         }
     }
+
+    private void SpawnWeaponUpgrades()
+    {
+        var weaponPrefabs = _gameResources.WeaponUpgradePrefabs();
+        foreach (var spawnPoint in _view.WeaponUpgradeSpawnPoints)
+        {
+            int randomIndex = Random.Range(0, weaponPrefabs.Count);
+            GameObject upgradeObject = GameObject.Instantiate(_gameResources.WeaponUpgradePrefabs(randomIndex), spawnPoint.position, spawnPoint.rotation);
+            
+        }
+    }
+
     private void SubscribeEvents()
     {
         GameEvents.OnPlayerDead += PlayerDead;
@@ -78,7 +87,7 @@ public class ShooterGameController : IShooterGameViewListener,
     }
     #endregion
 
-        #region Public Methods    
+    #region Public Methods    
     public void Load(Level _level)
     {
         _data.Load();
@@ -87,8 +96,10 @@ public class ShooterGameController : IShooterGameViewListener,
         SpawnPlayer();
 
         var _playerTransform = _playerController.GetTransform();
-        SpawnEnemy(_playerTransform);       
+        SpawnEnemy(_playerTransform);
+        SpawnWeaponUpgrades();
     }
+
     public void Unload()
     {
         _data.Unload();
@@ -98,13 +109,13 @@ public class ShooterGameController : IShooterGameViewListener,
 
     public void PlayerDead()
     {
-        DOVirtual.DelayedCall(1, 
+        DOVirtual.DelayedCall(1,
            () => RespawnPlayer(_view.PlayerSpawnPoint.position));
-    } 
+    }
+
     public void RespawnPlayer(Vector3 spawnPosition)
     {
         _playerController.Respawn(spawnPosition);
     }
     #endregion
-
 }

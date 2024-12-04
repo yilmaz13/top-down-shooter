@@ -1,23 +1,28 @@
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyView : MonoBehaviour
 {
+    #region Private Members
+
     [SerializeField] private Transform _healthSliderPoint;
-    [SerializeField] private Transform _armorSliderPoint; 
+    [SerializeField] private Transform _armorSliderPoint;
     [SerializeField] private Rigidbody _rigidbody;
-    [SerializeField] private Camera    _camera;
+    [SerializeField] private Camera _camera;
     private float _speed;
 
     private SliderView healthView;
     private SliderView armorView;
 
+    #endregion
+
+    #region Public Methods
+
     public void Initialize(float speed, Camera camera)
     {
-        _speed  = speed;
+        _speed = speed;
         _camera = camera;
     }
 
@@ -29,7 +34,7 @@ public class EnemyView : MonoBehaviour
     public void LookAtPlayer(Transform player)
     {
         Vector3 directionToPlayer = player.position - transform.position;
-        directionToPlayer.y = 0; // Y ekseninde dönüþü engelle
+        directionToPlayer.y = 0;
 
         if (directionToPlayer != Vector3.zero)
         {
@@ -40,29 +45,21 @@ public class EnemyView : MonoBehaviour
 
     public void InitializeHealthBar(float health, float maxHealth)
     {
-        healthView = Instantiate(Resources.Load<SliderView>("Prefabs/HpSliderParent"), _healthSliderPoint);
-        healthView.Initialize(Color.red);
-        healthView.UpdateValue(health, maxHealth);
+        healthView = InitializeSlider(_healthSliderPoint, "Prefabs/HpSliderParent", Color.red, health, maxHealth);
     }
 
     public void InitializeArmorBar(float armor, float maxArmor)
     {
-        armorView = Instantiate(Resources.Load<SliderView>("Prefabs/ArmorSliderParent"), _armorSliderPoint);
-        armorView.Initialize(Color.blue);
-
+        armorView = InitializeSlider(_armorSliderPoint, "Prefabs/ArmorSliderParent", Color.blue, armor, maxArmor);
         if (armor <= 0)
         {
             armorView.Hide();
-        }
-        else
-        {
-            armorView.UpdateValue(armor, maxArmor);
         }
     }
 
     public void UpdateHealthBar(float health, float maxHealth)
     {
-        if (health <= 0)
+        if (healthView == null || health <= 0)
             return;
 
         healthView.UpdateValue(health, maxHealth);
@@ -70,16 +67,19 @@ public class EnemyView : MonoBehaviour
 
     public void UpdateArmorBar(float armor, float maxArmor)
     {
-        if (armor <= 0)        
+        if (armorView == null || armor <= 0)
             return;
-       
-       armorView.UpdateValue(armor, maxArmor);
+
+        armorView.UpdateValue(armor, maxArmor);
     }
 
     public void TurnSlidersAtCamera()
     {
-        healthView.LookAtPosition(_camera.transform);
-        armorView.LookAtPosition(_camera.transform);
+        if (healthView != null)
+            healthView.LookAtPosition(_camera.transform);
+
+        if (armorView != null)
+            armorView.LookAtPosition(_camera.transform);
     }
 
     public void Dead()
@@ -91,4 +91,21 @@ public class EnemyView : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
+    #endregion
+
+    #region Private Methods
+
+    private SliderView InitializeSlider(Transform sliderPoint, string prefabPath, Color color, float value, float maxValue)
+    {
+        SliderView sliderView = Instantiate(Resources.Load<SliderView>(prefabPath), sliderPoint);
+        sliderView.Initialize(color);
+        if (value > 0)
+        {
+            sliderView.UpdateValue(value, maxValue);
+        }
+        return sliderView;
+    }
+
+    #endregion
 }

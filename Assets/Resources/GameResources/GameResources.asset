@@ -15,8 +15,14 @@ MonoBehaviour:
   _followCameraSmootTime: 0.2
   _playerBaseSpeed: 5
   _weaponList:
-  - {fileID: 0}
+  - {fileID: 8830720262758566732, guid: f0327a84428c1cb4b82338d00463fe13, type: 3}
+  - {fileID: 8286333083908733332, guid: 1b4bab68d91e94c45a71cfa2d55f1298, type: 3}
+  - {fileID: 9023741125569524184, guid: 3cb5353eb8aa4fe4fb5201e3077af742, type: 3}
   _playerPrefabs: {fileID: 8651241930869293101, guid: c58cf1a8413347148948161d01085a2a, type: 3}
   _enemyPrefabs: {fileID: 2599931490434102315, guid: 63a9f453f8c268e4d9c2f63b57b1403a, type: 3}
   _healthSliderPrefabs: {fileID: 0}
   _armorSliderPrefabs: {fileID: 0}
+  _weaponUpgradePrefabs:
+  - {fileID: 2303728226712772708, guid: 2ede5d59638acdc4aa3dfa8e2041752f, type: 3}
+  - {fileID: 2303728226712772708, guid: 22e68768f236b754cbe34e4838a74eb6, type: 3}
+  - {fileID: 2303728226712772708, guid: cbe6e25aa4c3210468a1854a830b80a8, type: 3}

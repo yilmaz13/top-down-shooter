@@ -3,7 +3,9 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour,
                                IDamageable 
-{    
+{
+    #region Private Members
+
     [SerializeField] private Weapon _weapon;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _player;
@@ -11,13 +13,19 @@ public class EnemyController : MonoBehaviour,
     [SerializeField] private float _attackRange = 5f;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private bool _isActive;
-
+    private float _lastAttackTime;
     private EnemyView _enemyView;
+
+    #endregion
+
+    #region Public Members
 
     public HealthController HealthController;
     public ArmorController ArmorController;
 
-    private float _lastAttackTime;
+    #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -42,16 +50,28 @@ public class EnemyController : MonoBehaviour,
             Patrol();
         }
     }
+    #endregion
 
+    #region Public Methods
     public void Initialize(Transform player, EnemyView enemyView)
     {
-        // _weapon = weapon;
         _enemyView = enemyView;
          _player = player;
+
         InitializeHealthAndArmorController(100, 0);
         InitializeView();
+
         HealthController.OnDead += Dead;
     }
+    public void ApplyDamage(float damage, float armorPenetration = 0)
+    {
+        TakeDamage(damage, armorPenetration);
+        _enemyView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
+        _enemyView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+    }
+    #endregion
+
+    #region Private Methods
     private void ChasePlayer()
     {
         //_navMeshAgent.SetDestination(_player.position);
@@ -59,34 +79,27 @@ public class EnemyController : MonoBehaviour,
 
     private void AttackPlayer()
     {
-       // _navMeshAgent.SetDestination(transform.position); // Düþmaný durdur
+       // _navMeshAgent.SetDestination(transform.position);
         transform.LookAt(_player);
 
         if (Time.time >= _lastAttackTime + _attackCooldown)
         {
-            _weapon.Shoot(Owner.Enemy);
+            _weapon.TryShoot(Owner.Enemy);
             _lastAttackTime = Time.time;
         }
     }
 
     private void Patrol()
     {
-        // Devriye gezme davranýþý burada uygulanabilir
     }
-  
-    public void ApplyDamage(float damage, float armorPenetration = 0)
-    {
-        TakeDamage(damage, armorPenetration);
-        _enemyView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _enemyView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);    
-    }
-    public void InitializeView()
+    
+    private void InitializeView()
     {
         _enemyView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
         _enemyView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
     }
    
-    public void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
+    private void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
     {
         HealthController = new HealthController();
         ArmorController = new ArmorController();
@@ -95,7 +108,7 @@ public class EnemyController : MonoBehaviour,
         ArmorController.Initialize(maxArmor);
     }
 
-    public void TakeDamage(float damage, float armorPenetration)
+    private void TakeDamage(float damage, float armorPenetration)
     {
         float remainingDamage = ArmorController.AbsorbDamage(damage, armorPenetration);
         HealthController.TakeDamage(remainingDamage);
@@ -105,4 +118,5 @@ public class EnemyController : MonoBehaviour,
         _isActive = false;
         _enemyView.Dead();
     }
+    #endregion
 }

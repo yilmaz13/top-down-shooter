@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class AppContext : MonoBehaviour
 {
-    #region Variables
-
+    #region Private Members   
+   
     [Header("References")]
     [SerializeField] private SceneReferences _sceneReferences;
     [SerializeField] private ResourceReferences _resourceReferences;
-
-    //      Private
+       
     private StateManager _stateManager;
-    private UserDataManager _userDataManager;  
+    private UserDataManager _userDataManager;
+
     #endregion
+
+    #region Unity Members   
 
     void Start()
     {      
@@ -23,11 +25,12 @@ public class AppContext : MonoBehaviour
         _stateManager.AddStates(new MenuGameState(_stateManager, _userDataManager,_sceneReferences, _resourceReferences));
 
         _stateManager.ChangeState(StateNames.Loading);
-
     }
 
     void Update()
     {
         _stateManager.GetCurrentState().UpdateState();
     }
+
+    #endregion
 }

@@ -1,23 +1,19 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Rifle : Weapon
 {
-    //TODO burst
     public override void Shoot(Owner owner)
     {
         int burstCount = weaponData.BurstCount;
-       // curretProjectileCount = 0;        
+        float burstDelay = weaponData.BurstDelay;
 
-       // if (curretProjectileCount < burstCount)
+        for (int i = 0; i < burstCount; i++)
         {
-            DOVirtual.DelayedCall(weaponData.BurstDelay, () =>
+            DOVirtual.DelayedCall(i * burstDelay, () =>
             {
                 SpawnProjectile(weaponData.Speed, weaponData.Range, weaponData.Damage, weaponData.ArmorPenetration, owner);
             });
-        }       
+        }
     }
 
     private void SpawnProjectile(float speed, float range, float damage, float armorPenetration, Owner owner)
@@ -28,7 +24,7 @@ public class Rifle : Weapon
         {
             projectile.transform.position = firePoint.position;
             projectile.transform.rotation = firePoint.rotation;
-            projectile.Initialize(speed, range, damage, armorPenetration, owner);           
+            projectile.Initialize(speed, range, damage, armorPenetration, owner);
         }
     }
 }
