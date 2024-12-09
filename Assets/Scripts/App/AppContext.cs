@@ -19,7 +19,7 @@ public class AppContext : MonoBehaviour
     {      
         _stateManager = new StateManager();
         _userDataManager = new UserDataManager();
-       
+
         _stateManager.AddStates(new LoadingState(_stateManager, _sceneReferences, _resourceReferences));
         _stateManager.AddStates(new GamePlayGameState(_stateManager, _userDataManager, _sceneReferences,  _resourceReferences));
         _stateManager.AddStates(new MenuGameState(_stateManager, _userDataManager,_sceneReferences, _resourceReferences));
@@ -32,5 +32,9 @@ public class AppContext : MonoBehaviour
         _stateManager.GetCurrentState().UpdateState();
     }
 
+    private void OnDestroy()
+    {
+        _stateManager.GetCurrentState().Deactivate();
+    }
     #endregion
 }
