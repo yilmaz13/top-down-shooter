@@ -23,8 +23,11 @@ public class SliderView : MonoBehaviour
     }
 
     public void UpdateValue(float value, float maxValue)
-    {       
-        SetSliderValue(value / maxValue);
+    {
+        if (value == 0)       
+            Hide();        
+        else        
+            SetSliderValue(value / maxValue);
     }
 
     public void TrackParent(Vector3 vector3)

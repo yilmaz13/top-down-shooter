@@ -125,11 +125,14 @@ public class GamePlayGameState : AStateBase,
 
     private void UnsubscribeEvents()
     {
+        _shooterController.OnDestory();
+
         GameEvents.OnStartGame -= StartGameListener;
         GameEvents.OnEndGame -= EndGameListener;     
         GameEvents.OnClickGotoMenu -= GotoMenu;     
 
         GameEvents.OnSpawnedPlayer -= FollowCameraPlayer;
+       
     }
 
     private void ClearScene()

@@ -8,6 +8,7 @@ public class GameResources : ScriptableObject
     [Header("Config")]
     [SerializeField] private float _followCameraSmootTime;
     [SerializeField] private float _playerBaseSpeed;
+    [SerializeField] private float _enemyBaseSpeed;
 
     [Header("Prefabs")]
     [SerializeField] private List<GameObject> _weaponList;
@@ -19,6 +20,7 @@ public class GameResources : ScriptableObject
 
     public float FollowCameraSmootTime => _followCameraSmootTime;
     public float PlayerBaseSpeed => _playerBaseSpeed;
+    public float EnemyBaseSpeed => _enemyBaseSpeed;
     public List<GameObject> WeaponList()
     {
         return _weaponList;
