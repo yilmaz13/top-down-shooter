@@ -97,12 +97,7 @@ public class GamePlayGameState : AStateBase,
     private void InitializeCamera()
     {
         _cameraController = _sceneReferences.MainCam.GetComponent<CameraController>();       
-    }
-
-    private void FollowCameraPlayer(Transform playerTranfrom)
-    {
-        _cameraController.Initialize(playerTranfrom, _gameResources.FollowCameraSmootTime);
-    }
+    }    
 
     private void PlayLevel()
     {
@@ -173,4 +168,9 @@ public class GamePlayGameState : AStateBase,
 
     }
     #endregion
+
+    public void FollowCameraPlayer(Transform playerTranfrom)
+    {
+        _cameraController.Initialize(playerTranfrom, _gameResources.FollowCameraSmootTime);
+    }
 }

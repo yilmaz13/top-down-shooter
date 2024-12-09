@@ -48,7 +48,8 @@ public class ShooterGameController : IShooterGameViewListener,
         _playerController.Initialize(this, playerView, _gameResources.PlayerBaseSpeed);
         playerView.Initialize(_gameResources.PlayerBaseSpeed, _camera);
 
-        GameEvents.SpawnedPlayer(playerView.transform);
+     //   GameEvents.SpawnedPlayer(playerView.transform);
+        _listener.FollowCameraPlayer(playerView.transform);
     }
 
     private void SpawnEnemy(Transform playerTransform)
