@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour,
-                               IDamageable 
+                               IDamageable
 {
     #region Private Members
 
@@ -13,6 +12,8 @@ public class EnemyController : MonoBehaviour,
     [SerializeField] private float _attackRange = 5f;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private bool _isActive;
+
+    private IEnemyListener _listener;
     private float _lastAttackTime;
     private EnemyView _enemyView;
 
@@ -22,7 +23,7 @@ public class EnemyController : MonoBehaviour,
 
     public HealthController HealthController;
     public ArmorController ArmorController;
-
+    public EnemyView EnemyView => _enemyView;
     #endregion
 
     #region Unity Methods
@@ -53,16 +54,19 @@ public class EnemyController : MonoBehaviour,
     #endregion
 
     #region Public Methods
-    public void Initialize(Transform player, EnemyView enemyView)
+    public void Initialize(Transform player, EnemyView enemyView, IEnemyListener listener)
     {
         _enemyView = enemyView;
-         _player = player;
+        _player = player;
+        _listener = listener;
 
         InitializeHealthAndArmorController(100, 0);
         InitializeView();
 
-        HealthController.OnDead += Dead;
+        SubscribeHealthEvents();
+        _isActive = true;
     }
+
     public void ApplyDamage(float damage, float armorPenetration = 0)
     {
         TakeDamage(damage, armorPenetration);
@@ -79,7 +83,7 @@ public class EnemyController : MonoBehaviour,
 
     private void AttackPlayer()
     {
-       // _navMeshAgent.SetDestination(transform.position);
+        // _navMeshAgent.SetDestination(transform.position);
         transform.LookAt(_player);
 
         if (Time.time >= _lastAttackTime + _attackCooldown)
@@ -92,19 +96,19 @@ public class EnemyController : MonoBehaviour,
     private void Patrol()
     {
     }
-    
+
     private void InitializeView()
     {
         _enemyView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
         _enemyView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
     }
-   
+
     private void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
     {
         HealthController = new HealthController();
         ArmorController = new ArmorController();
 
-        HealthController.Initialize(maxHealth);
+        HealthController.Initialize(maxHealth, OnDead);
         ArmorController.Initialize(maxArmor);
     }
 
@@ -113,10 +117,23 @@ public class EnemyController : MonoBehaviour,
         float remainingDamage = ArmorController.AbsorbDamage(damage, armorPenetration);
         HealthController.TakeDamage(remainingDamage);
     }
-    private void Dead()
+    private void OnDead()
     {
         _isActive = false;
+        _listener.OnEnemyDead(this);
         _enemyView.Dead();
+        UnsubscribeHealthEvents();
     }
+
+    private void SubscribeHealthEvents()
+    {
+        HealthController.OnDead += OnDead;
+    }
+
+    private void UnsubscribeHealthEvents()
+    {
+        HealthController.OnDead -= OnDead;
+    }
+
     #endregion
 }

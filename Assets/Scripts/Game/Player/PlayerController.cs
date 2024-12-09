@@ -16,31 +16,31 @@ public class PlayerController : MonoBehaviour,
 
     public HealthController HealthController;
     public ArmorController ArmorController;
+    public float PlayerSpeed => _playerBaseSpeed;
 
     #endregion
-    public float PlayerSpeed => _playerBaseSpeed;
 
     #region Public Methods
 
     public void Initialize(IPlayerController listener, PlayerView playerView, float playerBaseSpeed)
-    {
-        InitializeHealthAndArmorController(100, 100);
-
-        _playerView = playerView;
-        InitializeView();
-        _isActive = true;
-        HealthController.OnDead += Dead;
+    {      
+        _playerView = playerView;                
         _listener = listener;
+        _playerBaseSpeed = playerBaseSpeed;
+
+        //TODO get value from game resources
+        InitializeHealthAndArmorController(100, 100);
+        SubscribeToHealthControllerEvents();
+        InitializeView();
+
+        _isActive = true;
     }
 
     void FixedUpdate()
     {
-        if (!_isActive)
+        if (!_isActive || _playerView == null)
             return;
 
-        if (_playerView == null)
-            return;
-        
         _playerView.Move();
         _playerView.LookAtMouse();
         _playerView.TurnSlidersAtCamera();
@@ -48,28 +48,13 @@ public class PlayerController : MonoBehaviour,
     public void ApplyDamage(float damage, float armorPenetration)
     {
         TakeDamage(damage, armorPenetration);
-        _playerView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _playerView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        UpdateViewBars();     
     }
-
-    public void InitializeView()
-    {      
-        _playerView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _playerView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
-    }
+    
     public Transform GetTransform()
     {
         return transform;
-    }
-
-    public void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
-    {
-        HealthController = new HealthController();
-        ArmorController = new ArmorController();
-
-        HealthController.Initialize(maxHealth);
-        ArmorController.Initialize(maxArmor);        
-    }
+    }  
 
     public void TakeDamage(float damage, float armorPenetration)
     {
@@ -77,26 +62,65 @@ public class PlayerController : MonoBehaviour,
         HealthController.TakeDamage(remainingDamage);
     }
 
-    private void Dead()
+    #endregion
+
+    #region Private Methods
+
+    private void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
+    {
+        HealthController = new HealthController();
+        ArmorController = new ArmorController();
+
+        HealthController.Initialize(maxHealth, OnDead);
+        ArmorController.Initialize(maxArmor);
+    }
+    private void InitializeView()
+    {
+        _playerView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
+        _playerView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+    }
+
+    private void UpdateViewBars()
+    {
+        _playerView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
+        _playerView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+    }
+
+    private void OnDead()
     {
         _isActive = false;
-        _playerView.Dead();
+        _playerView.OnDead();
 
-        //TODO event sisteminde bir sorun var null referance hatasý alýyorum _listener ile haber kuruyorum
-        //GameEvents.PlayerDead();
-        _listener.PlayerDead();
+        UnsubscribeFromHealthControllerEvents();
+
+        GameEvents.PlayerDead();       
     }
 
     public void Respawn(Vector3 spawnPosition)
     {
         _isActive = true;
-        HealthController.Initialize(100);
-        HealthController.OnDead += Dead;
-
-        ArmorController.Initialize(100);
+        //TODO get value from game resources
+        InitializeHealthAndArmorController(100, 100);
+        SubscribeToHealthControllerEvents();
+        
         _playerView.Transfer(spawnPosition);
         _playerView.Respawn();
+    }   
+
+    private void SubscribeToHealthControllerEvents()
+    {
+        HealthController.OnDead += OnDead;
     }
 
-   #endregion
+    private void UnsubscribeFromHealthControllerEvents()
+    {
+        HealthController.OnDead -= OnDead;
+    }
+
+    private void OnDestroy()
+    {
+        //double check 
+        UnsubscribeFromHealthControllerEvents();
+    }
+    #endregion
 }

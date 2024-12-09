@@ -17,7 +17,7 @@ public class HealthController
     #endregion
 
     #region Public Methods
-    public void Initialize(float health, Action onDead = null)
+    public void Initialize(float health, Action onDead)
     {
         _health    = health;
         _maxHealth = health;
@@ -29,9 +29,7 @@ public class HealthController
         _health -= damage;
         if (_health < 0)
         {
-            _health = 0;
-            OnDead.Invoke();
-            OnDead = null;
+            Dead();            
         }
     }
 
@@ -42,6 +40,12 @@ public class HealthController
         {
             _health = _maxHealth;
         }
+    }
+
+    private void Dead()
+    {
+        _health = 0;
+        OnDead.Invoke();
     }
 
     #endregion
