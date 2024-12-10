@@ -22,12 +22,23 @@ public class SliderView : MonoBehaviour
         Show();
     }
 
+    public void Initialize(float value, float maxValue)
+    {       
+        SetSliderValue(1);      
+        Show();
+        UpdateValue(maxValue, maxValue);
+    }
+
     public void UpdateValue(float value, float maxValue)
     {
-        if (value == 0)       
-            Hide();        
-        else        
+        if (value == 0)
+        {
+            Hide();
+        }
+        else
+        {            
             SetSliderValue(value / maxValue);
+        }           
     }
 
     public void TrackParent(Vector3 vector3)

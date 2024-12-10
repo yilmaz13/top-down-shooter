@@ -26,13 +26,13 @@ public abstract class AgentView : MonoBehaviour
     public void InitializeHealthBar(float health, float maxHealth)
     {
         healthView = Instantiate(_healthSliderPrefabs, _healthSliderPoint).GetComponent<SliderView>();
-        healthView.UpdateValue(health, maxHealth);
+        healthView.Initialize(health, maxHealth);      
     }
 
     public void InitializeArmorBar(float armor, float maxArmor)
     {
         armorView = Instantiate(_armorSliderPrefabs, _armorSliderPoint).GetComponent<SliderView>();
-        armorView.UpdateValue(armor, maxArmor);
+        armorView.Initialize(armor, maxArmor);
     }
 
     public void UpdateHealthBar(float health, float maxHealth)
@@ -45,6 +45,11 @@ public abstract class AgentView : MonoBehaviour
         armorView.UpdateValue(armor, maxArmor);
     }
 
+    public void ShowBars()
+    {
+        healthView.Show();
+        armorView.Show();
+    }
     public void TurnSlidersAtCamera()
     {
         healthView.LookAtPosition(_camera.transform);

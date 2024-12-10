@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour,
         HealthController.Initialize(maxHealth, OnDead);
         ArmorController.Initialize(maxArmor);
     }
+
     private void InitializeView()
     {
         _playerView.InitializeHealthBar(HealthController.Value, HealthController.MaxValue);
@@ -103,6 +104,8 @@ public class PlayerController : MonoBehaviour,
         InitializeHealthAndArmorController(100, 100);
         SubscribeToHealthControllerEvents();
         
+        UpdateViewBars();
+        _playerView.ShowBars();
         _playerView.Transfer(spawnPosition);
         _playerView.Respawn();
     }   
