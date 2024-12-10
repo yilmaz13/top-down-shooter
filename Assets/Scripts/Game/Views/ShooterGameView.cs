@@ -7,6 +7,7 @@ public class ShooterGameView : MonoBehaviour
     [SerializeField] private Transform _playerSpawnPoint;
     [SerializeField] private List<Transform> _enemySpawnPoints;
     [SerializeField] private List<Transform> _weaponUpgradeSpawnPoints;
+    [SerializeField] private List<Transform> _enemyPatrolPath;
 
     private List<EnemyView> _enemyViews;
     private List<WeaponUpgradeCollectable> _weaponUpgradeViews;
@@ -24,6 +25,7 @@ public class ShooterGameView : MonoBehaviour
     public List<Transform> EnemySpawnPoints => _enemySpawnPoints;
     public List<Transform> WeaponUpgradeSpawnPoints => _weaponUpgradeSpawnPoints;
 
+    public List<Transform> EnemyPatrolPath => _enemyPatrolPath;
     #endregion
 
     public void Initialize(IShooterGameViewListener listener, Camera gameCamera, GameResources gameResources)

@@ -71,6 +71,8 @@ public class ShooterGameController : IShooterGameViewListener,
             enemyController.Initialize(this, enemyView, playerTransform, _gameResources.EnemyBaseSpeed,
                                        _gameResources.EnemyBaseHealth, _gameResources.EnemyBaseArmor);
             _enemyController.Add(enemyController);
+
+            enemyController.SetPatrolPoints(_view.EnemyPatrolPath[i]);
         }
     }
 

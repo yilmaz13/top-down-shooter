@@ -69,6 +69,11 @@ public class WeaponController : MonoBehaviour
         GetCurrentWeapon().ApplyUpgrade(upgradeData);
     }
 
+    public bool HasUpgradeCurrentWeapon(WeaponUpgradeData upgradeData)
+    {
+        return GetCurrentWeapon().HasUpgrade(upgradeData);
+    }
+
     void OnDestroy()
     {
         UnsubscribeEvents();

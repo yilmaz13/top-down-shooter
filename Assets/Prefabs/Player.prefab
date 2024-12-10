@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 3544402572618931409}
   - component: {fileID: 8945806582898232036}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: ForwadCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -445,6 +445,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3130363666035286957}
+  - {fileID: 7141393177967842232}
   - {fileID: 5991703554379512100}
   - {fileID: 1762167872276688135}
   - {fileID: 4643910795102410183}
@@ -452,7 +453,6 @@ Transform:
   - {fileID: 5391414287324935582}
   - {fileID: 8965178462596169228}
   - {fileID: 5861629335319134643}
-  - {fileID: 7141393177967842232}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7476725641940529702

@@ -12,7 +12,6 @@ public class PlayerView : AgentView
 
     public void LookAtMouse()
     {
-        //memory için optimize edilebilir     
         Plane playerPlane = new Plane(Vector3.up, transform.position);
        
         Ray ray = _camera.ScreenPointToRay(InputManager.Instance.MousePosition);

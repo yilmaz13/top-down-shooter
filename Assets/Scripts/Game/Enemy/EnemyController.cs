@@ -1,4 +1,7 @@
+using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class EnemyController : AgentController,
                                IDamageable
@@ -8,14 +11,17 @@ public class EnemyController : AgentController,
     [SerializeField] private Weapon _weapon;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _player;
-    [SerializeField] private float _chaseRange = 10f;
-    [SerializeField] private float _attackRange = 5f;
-    [SerializeField] private float _attackCooldown = 1f;
+    [SerializeField] private float _chaseRange;
+    [SerializeField] private float _attackRange;
+
 
     private IEnemyListener _listener;
-    private float _lastAttackTime;
     private EnemyView _enemyView;
 
+    private Transform _patrolPathParent;
+    private int patrolIndex = 0;
+    private bool _hasPatrol;
+    private Vector3 _currentPatrol;
     #endregion
 
     #region Public Members
@@ -32,6 +38,8 @@ public class EnemyController : AgentController,
 
     private void Update()
     {
+        if (_player == null) return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
         if (distanceToPlayer <= _attackRange)
@@ -47,7 +55,7 @@ public class EnemyController : AgentController,
             Patrol();
         }
 
-        _enemyView.TurnSlidersAtCamera();
+        _enemyView?.TurnSlidersAtCamera();
     }
     #endregion
 
@@ -60,6 +68,9 @@ public class EnemyController : AgentController,
         _listener = listener;
 
         base.Initialize(enemyView, speed, health, armor);
+
+       // GameEvents.OnPlayerDead += PlayerDead;
+       GameEvents.OnSpawnedPlayer += SetPlayerTransform;
     }
 
     #endregion
@@ -67,33 +78,79 @@ public class EnemyController : AgentController,
     #region Private Methods
     private void ChasePlayer()
     {
-        //_navMeshAgent.SetDestination(_player.position);
+        _enemyView.Move(_player.position);
+        _hasPatrol = false;
     }
 
     private void AttackPlayer()
     {
-        // _navMeshAgent.SetDestination(transform.position);
-       
+        if (_player == null)
+            return;
+
         _enemyView.LookAtPlayer(_player);
 
-        if (Time.time >= _lastAttackTime + _attackCooldown)
+        if (_weapon.CanShoot())
         {
-            _weapon.TryShoot(Owner.Enemy);
-            _lastAttackTime = Time.time;
+            _weapon.TryShoot(Owner.Enemy);           
         }
+
+        _hasPatrol = false;
     }
 
     private void Patrol()
     {
+        if (!_hasPatrol)
+        {
+            patrolIndex = 0;
+            _currentPatrol = _patrolPathParent.GetChild(patrolIndex).position;
+            _hasPatrol = true;
+             _enemyView.Move(_currentPatrol);
+        }
+        else if ((Vector3.Distance(transform.position, _currentPatrol)) < 1.1f)
+        {
+            MoveNextPatrolPoint();
+        }
+    }
+
+    public void PlayerDead()
+    {
+        _player = null;
     } 
-    
+
+    public void SetPlayerTransform(Transform player)
+    {
+        _player = player;
+    }
+    public void SetPatrolPoints(Transform patrolPathParent)
+    {
+        _patrolPathParent = patrolPathParent;
+    }
+
+    public void MoveNextPatrolPoint()
+    {
+        patrolIndex++;
+        if (_patrolPathParent.childCount <= patrolIndex)
+            patrolIndex = 0;
+
+        _currentPatrol = _patrolPathParent.GetChild(patrolIndex).position;        
+        _enemyView.Move(_currentPatrol);
+    }
+
     protected override void OnDead()
     {
         _isActive = false;
         _listener.OnEnemyDead(this);
         _enemyView.OnDead();
         UnsubscribeHealthEvents();
+
+        GameEvents.OnPlayerDead -= PlayerDead;
+        GameEvents.OnSpawnedPlayer -= SetPlayerTransform;
     }
 
+    private void OnDestroy()
+    {
+        GameEvents.OnPlayerDead -= PlayerDead;
+        GameEvents.OnSpawnedPlayer -= SetPlayerTransform;
+    }
     #endregion
 }

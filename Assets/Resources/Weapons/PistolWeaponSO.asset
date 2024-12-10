@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: PistolWeaponSO
   m_EditorClassIdentifier: 
   _weaponType: 1
-  _speed: 30
+  _speed: 50
   _damage: 10
   _armorPenetration: 10
-  _range: 5
+  _range: 7
   _fireRate: 1
   _areaOfEffect: 0
   _burstCount: 0

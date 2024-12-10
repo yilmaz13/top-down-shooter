@@ -12,9 +12,12 @@ public class WeaponUpgradeCollectable : MonoBehaviour
     {
         if (other.TryGetComponent(out WeaponController weaponController))
         {
-            weaponController.ApplyUpgrade(WeaponUpgradeData);
-            //TODO:make poolable
-            Destroy(gameObject);
+            if (!weaponController.HasUpgradeCurrentWeapon(WeaponUpgradeData))
+            {
+                weaponController.ApplyUpgrade(WeaponUpgradeData);
+                //TODO:make poolable
+                Destroy(gameObject);
+            }   
         }
     }
 }

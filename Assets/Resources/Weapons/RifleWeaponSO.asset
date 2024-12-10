@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RifleWeaponSO
   m_EditorClassIdentifier: 
   _weaponType: 0
-  _speed: 40
+  _speed: 30
   _damage: 25
   _armorPenetration: 25
-  _range: 7
+  _range: 5
   _fireRate: 3
   _areaOfEffect: 0
   _burstCount: 3
