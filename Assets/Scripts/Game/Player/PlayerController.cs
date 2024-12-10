@@ -76,14 +76,14 @@ public class PlayerController : MonoBehaviour,
     }
     private void InitializeView()
     {
-        _playerView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _playerView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        _playerView.InitializeHealthBar(HealthController.Value, HealthController.MaxValue);
+        _playerView.InitializeArmorBar(ArmorController.Value, ArmorController.MaxValue);
     }
 
     private void UpdateViewBars()
     {
-        _playerView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _playerView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        _playerView.UpdateHealthBar(HealthController.Value, HealthController.MaxValue);
+        _playerView.UpdateArmorBar(ArmorController.Value, ArmorController.MaxValue);
     }
 
     private void OnDead()

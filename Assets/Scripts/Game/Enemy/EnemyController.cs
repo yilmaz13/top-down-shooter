@@ -50,6 +50,8 @@ public class EnemyController : MonoBehaviour,
         {
             Patrol();
         }
+
+        _enemyView.TurnSlidersAtCamera();
     }
     #endregion
 
@@ -70,8 +72,8 @@ public class EnemyController : MonoBehaviour,
     public void ApplyDamage(float damage, float armorPenetration = 0)
     {
         TakeDamage(damage, armorPenetration);
-        _enemyView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _enemyView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        _enemyView.UpdateHealthBar(HealthController.Value, HealthController.MaxValue);
+        _enemyView.UpdateArmorBar(ArmorController.Value, ArmorController.MaxValue);
     }
     #endregion
 
@@ -84,7 +86,8 @@ public class EnemyController : MonoBehaviour,
     private void AttackPlayer()
     {
         // _navMeshAgent.SetDestination(transform.position);
-        transform.LookAt(_player);
+       
+        _enemyView.LookAtPlayer(_player);
 
         if (Time.time >= _lastAttackTime + _attackCooldown)
         {
@@ -99,8 +102,8 @@ public class EnemyController : MonoBehaviour,
 
     private void InitializeView()
     {
-        _enemyView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _enemyView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        _enemyView.InitializeHealthBar(HealthController.Value, HealthController.MaxValue);
+        _enemyView.InitializeArmorBar(ArmorController.Value, ArmorController.MaxValue);
     }
 
     private void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
@@ -121,7 +124,7 @@ public class EnemyController : MonoBehaviour,
     {
         _isActive = false;
         _listener.OnEnemyDead(this);
-        _enemyView.Dead();
+        _enemyView.OnDead();
         UnsubscribeHealthEvents();
     }
 

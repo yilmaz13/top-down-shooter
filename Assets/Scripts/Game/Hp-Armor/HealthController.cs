@@ -1,50 +1,32 @@
+
 using System;
-public class HealthController
+
+public class HealthController : BaseValueController
 {
-    #region Private Members
-
-    private float _health;
-    private float _maxHealth;  
-
-    #endregion
-
-    #region Public Members
-
-    public float Health => _health;
-    public float MaxHealth => _maxHealth;
-    public float HealthPercentage => _health / _maxHealth;
     public Action OnDead;
-    #endregion
 
     #region Public Methods
-    public void Initialize(float health, Action onDead)
+
+    public void Initialize(float value, Action onDead)
     {
-        _health    = health;
-        _maxHealth = health;
+        base.Initialize(value);
         OnDead = onDead;
     }
-
     public void TakeDamage(float damage)
     {
-        _health -= damage;
-        if (_health < 0)
+        _value -= damage;
+        if (_value < 0)
         {
-            Dead();            
+            Dead();
         }
     }
 
-    public void Cure(float cureAmount)
-    {
-        _health += cureAmount;
-        if (_health > _maxHealth)
-        {
-            _health = _maxHealth;
-        }
-    }
+    #endregion
 
+    #region Private Methods
     private void Dead()
     {
-        _health = 0;
+        _value = 0;
         OnDead.Invoke();
     }
 
