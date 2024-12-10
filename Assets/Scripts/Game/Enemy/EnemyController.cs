@@ -65,6 +65,9 @@ public class EnemyController : AgentController,
         _listener = listener;
 
         base.Initialize(enemyView, speed, health, armor);
+
+        GameEvents.OnPlayerDead += DestroyPlayer;
+        GameEvents.OnSpawnedPlayer += SpawnPlayer;
     }
 
     #endregion
@@ -106,6 +109,15 @@ public class EnemyController : AgentController,
         }
     }
    
+    private void DestroyPlayer()
+    {
+        _player = null;
+    }
+    
+    private void SpawnPlayer(Transform transform)
+    {
+        _player = transform;
+    }
     public void SetPatrolPoints(Transform patrolPathParent)
     {
         _patrolPathParent = patrolPathParent;
@@ -130,7 +142,9 @@ public class EnemyController : AgentController,
     }
 
     private void OnDestroy()
-    {       
+    {
+        GameEvents.OnPlayerDead -= DestroyPlayer;
+        GameEvents.OnSpawnedPlayer -= SpawnPlayer;
     }
     #endregion
 }

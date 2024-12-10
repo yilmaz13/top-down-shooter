@@ -38,14 +38,15 @@ public class PlayerController : AgentController,
     #region Private Methods       
 
     protected override void OnDead()
-    {
-        _isActive = false;
-        _playerView.OnDead();
-
-        UnsubscribeHealthEvents();
-
-        //_listener.PlayerDead();
-        GameEvents.PlayerDead();       
+    {      
+        if (_isActive)
+        {
+            _playerView.OnDead();
+            UnsubscribeHealthEvents();
+            //_listener.PlayerDead();
+            GameEvents.PlayerDead();
+            _isActive = false;
+        }         
     }
 
     public void Respawn(Vector3 spawnPosition)

@@ -131,7 +131,7 @@ public class GamePlayGameState : AStateBase,
         GameEvents.OnEndGame += EndGameListener;
         GameEvents.OnClickGotoMenu += GotoMenu;
 
-        GameEvents.OnSpawnedPlayer += FollowCameraPlayer;
+        GameEvents.OnSpawnedPlayer += FollowCameraPlayer;       
     }
 
     private void UnsubscribeEvents()

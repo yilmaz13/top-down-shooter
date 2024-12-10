@@ -122,7 +122,7 @@ public class ShooterGameController : IShooterGameViewListener,
 
     public void PlayerDead()
     {
-        DOVirtual.DelayedCall(1,
+        DOVirtual.DelayedCall(2,
            () => RespawnPlayer(_view.PlayerSpawnPoint.position));
     }
 
@@ -138,6 +138,7 @@ public class ShooterGameController : IShooterGameViewListener,
     public void RespawnPlayer(Vector3 spawnPosition)
     {
         _playerController.Respawn(spawnPosition);
+        GameEvents.SpawnedPlayer(_playerController.transform);
     }
 
     public void OnDestory()

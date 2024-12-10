@@ -5,19 +5,26 @@ public class HealthController : BaseValueController
 {
     public Action OnDead;
 
+    public bool isDead;
     #region Public Methods
 
     public void Initialize(float value, Action onDead)
     {
         base.Initialize(value);
+        isDead = false;
         OnDead = onDead;
     }
+
     public void TakeDamage(float damage)
     {
-        _value -= damage;
-        if (_value < 0)
+        if (!isDead)
         {
-            Dead();
+            _value -= damage;
+
+            if (_value <= 0)
+            {
+                Dead();
+            }
         }
     }
 
@@ -27,6 +34,7 @@ public class HealthController : BaseValueController
     private void Dead()
     {
         _value = 0;
+        isDead = true;
         OnDead.Invoke();
     }
 
