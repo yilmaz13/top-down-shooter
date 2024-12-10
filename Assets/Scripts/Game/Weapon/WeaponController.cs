@@ -5,7 +5,8 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Weapon[] _weapons;
     private int _currentWeaponIndex = 0;
-    private Owner _owner; 
+    private Owner _owner;
+
     void Start()
     {
         foreach (var weapon in _weapons)
@@ -14,32 +15,11 @@ public class WeaponController : MonoBehaviour
         }
         SwitchWeapon(0);
 
-        _owner= Owner.Player;
+        _owner = Owner.Player;
 
         SubscribeEvents();
     }
-
-    void Update()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            _weapons[_currentWeaponIndex].TryShoot(_owner);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SwitchWeapon(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SwitchWeapon(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SwitchWeapon(2);
-        }
-    }
-
+   
     void SwitchWeapon(int index)
     {
         if (index >= 0 && index < _weapons.Length)
@@ -55,11 +35,20 @@ public class WeaponController : MonoBehaviour
     private void SubscribeEvents()
     {
         GameEvents.OnPlayerDead += ClearWeaponUpgrade;
+        InputManager.Instance.OnFire += HandleFire;
+        InputManager.Instance.OnSwitchWeapon += SwitchWeapon;
     }
 
     private void UnsubscribeEvents()
     {
         GameEvents.OnPlayerDead -= ClearWeaponUpgrade;
+        InputManager.Instance.OnFire -= HandleFire;
+        InputManager.Instance.OnSwitchWeapon -= SwitchWeapon;
+    }
+
+    private void HandleFire()
+    {
+        _weapons[_currentWeaponIndex].TryShoot(_owner);
     }
 
     private void ClearWeaponUpgrade()
@@ -69,13 +58,19 @@ public class WeaponController : MonoBehaviour
             weapon.ResetUpgrades();
         }
     }
+
     public Weapon GetCurrentWeapon()
     {
         return _weapons[_currentWeaponIndex];
     }
+
     public void ApplyUpgrade(WeaponUpgradeData upgradeData)
     {
         GetCurrentWeapon().ApplyUpgrade(upgradeData);
     }
 
+    void OnDestroy()
+    {
+        UnsubscribeEvents();
+    }
 }
