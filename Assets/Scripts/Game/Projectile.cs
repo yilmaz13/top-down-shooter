@@ -39,7 +39,10 @@ public abstract class Projectile : MonoBehaviour,
 
     protected abstract void OnTriggerEnter(Collider other);
 
-    protected abstract void ReturnToPool();
+    protected virtual void ReturnToPool()
+    {
+        _isInitialized = false;
+    }
 
     public void OnSpawn() { }
 

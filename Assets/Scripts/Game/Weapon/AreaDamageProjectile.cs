@@ -17,6 +17,7 @@ public class AreaDamageProjectile : Projectile
 
     protected override void ReturnToPool()
     {
+        base.ReturnToPool();
         PoolManager.Instance.ReturnObject(nameof(AreaDamageProjectile), this);
     }
 

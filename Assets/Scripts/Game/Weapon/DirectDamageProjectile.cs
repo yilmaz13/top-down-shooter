@@ -18,6 +18,7 @@ public class DirectDamageProjectile : Projectile
 
     protected override void ReturnToPool()
     {
+        base.ReturnToPool();
         PoolManager.Instance.ReturnObject(nameof(DirectDamageProjectile), this);
     }
 }
