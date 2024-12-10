@@ -8,6 +8,13 @@ public class GameResources : ScriptableObject
     [Header("Config")]
     [SerializeField] private float _followCameraSmootTime;
     [SerializeField] private float _playerBaseSpeed;
+    [SerializeField] private float _playerBaseHealth;
+    [SerializeField] private float _playerBaseArmor;
+
+    //birden çok enemy olursa farklý bir resource oluþturulabilir
+    [SerializeField] private float _enemyBaseSpeed;
+    [SerializeField] private float _enemyBaseHealth;
+    [SerializeField] private float _enemyBaseArmor;
 
     [Header("Prefabs")]
     [SerializeField] private List<GameObject> _weaponList;
@@ -17,8 +24,17 @@ public class GameResources : ScriptableObject
     [SerializeField] private GameObject _armorSliderPrefabs;
     [SerializeField] private List<GameObject> _weaponUpgradePrefabs;
 
+    [SerializeField] private DirectDamageProjectile _directDamageProjectilePrefab;
+    [SerializeField] private AreaDamageProjectile _areaDamageProjectilePrefab;
+
     public float FollowCameraSmootTime => _followCameraSmootTime;
     public float PlayerBaseSpeed => _playerBaseSpeed;
+    public float PlayerBaseHealth => _playerBaseHealth;
+    public float PlayerBaseArmor => _playerBaseArmor;
+    public float EnemyBaseSpeed => _enemyBaseSpeed;
+    public float EnemyBaseHealth => _enemyBaseHealth;
+    public float EnemyBaseArmor => _enemyBaseArmor;
+
     public List<GameObject> WeaponList()
     {
         return _weaponList;
@@ -54,5 +70,14 @@ public class GameResources : ScriptableObject
     public GameObject WeaponUpgradePrefabs(int weaponUpgradeIndex)
     {
         return _weaponUpgradePrefabs[weaponUpgradeIndex];
+    }
+
+    public DirectDamageProjectile DirectDamageProjectilePrefab()
+    {
+        return _directDamageProjectilePrefab;
+    }
+    public AreaDamageProjectile AreaDamageProjectilePrefab()
+    {
+        return _areaDamageProjectilePrefab;
     }
 }

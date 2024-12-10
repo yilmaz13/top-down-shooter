@@ -4,7 +4,8 @@ public class CameraController : MonoBehaviour
 {
     #region Variables
 
-    private Vector3 _offset;
+    [SerializeField] private Vector3 _offset;
+
     private Transform _targetTransform;
     private Transform _transform;
     private float _smoothTime = 0.1f;
@@ -23,11 +24,7 @@ public class CameraController : MonoBehaviour
     public void Initialize(Transform targetTransform, float smoothTime)
     {
         _smoothTime = smoothTime;
-        _targetTransform = targetTransform;
-        _offset = _transform.position - _targetTransform.position;
-
-        _offset += Vector3.up * _offsetY;
-
+        _targetTransform = targetTransform;      
         _following = true;
     }
 

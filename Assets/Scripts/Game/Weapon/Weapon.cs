@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,26 +32,71 @@ public abstract class Weapon : MonoBehaviour
             Shoot(owner);
             _lastShootTime = Time.time;
         }
+    } 
+    
+    public bool CanShoot()
+    {
+        if (Time.time >= _lastShootTime + _cooldown) 
+            return true;
+
+        return false;
     }
 
-    public void ApplyUpgrade(WeaponUpgradeData upgradeData)
+    public bool ApplyUpgrade(WeaponUpgradeData upgradeData)
     {
-        if (!_activeUpgrades.Contains(upgradeData))
+        foreach (var activeUpgrade in _activeUpgrades)
         {
-            switch (upgradeData.weaponUpgradeType)
+            if (activeUpgrade.weaponUpgradeType == upgradeData.weaponUpgradeType)
             {
-                case WeaponUpgradeType.Scope:
-                    weaponData.Range += upgradeData.value;
-                    break;
-                case WeaponUpgradeType.ArmorPiercingRounds:
-                    weaponData.ArmorPenetration += upgradeData.value;
-                    break;
-                case WeaponUpgradeType.Barrel:
-                    weaponData.Damage += upgradeData.value;
-                    break;
+                Debug.Log("Upgrade already applied");
+                return false;
             }
-            _activeUpgrades.Add(upgradeData);
         }
+
+        switch (upgradeData.weaponUpgradeType)
+        {
+            case WeaponUpgradeType.Scope:
+                weaponData.Range += upgradeData.value;
+                break;
+            case WeaponUpgradeType.ArmorPiercingRounds:
+                weaponData.ArmorPenetration += upgradeData.value;
+                break;
+            case WeaponUpgradeType.Barrel:
+                weaponData.Damage += upgradeData.value;
+                break;
+        }
+
+        _activeUpgrades.Add(upgradeData);
+        return true;
+    }
+
+    public bool HasUpgrade(WeaponUpgradeData upgradeData)
+    {
+        foreach (var activeUpgrade in _activeUpgrades)
+        {
+            if (activeUpgrade.weaponUpgradeType == upgradeData.weaponUpgradeType)
+            {
+                Debug.Log("Upgrade already applied");
+                return true;
+            }
+        }
+
+        return false;
+    } 
+    
+    public bool IsUpgradeable(WeaponUpgradeData upgradeData)
+    {
+        foreach (var upgrade in weaponData.Upgrades)
+        {
+            if (upgrade.weaponUpgradeType == upgradeData.weaponUpgradeType)
+            {
+                Debug.Log("Upgrade is available");
+                return true;
+            }
+        }
+
+        Debug.Log("Upgrade is not available");
+        return false;
     }
 
     public void ResetUpgrades()
@@ -64,5 +110,10 @@ public abstract class Weapon : MonoBehaviour
         {
             ApplyUpgrade(upgrade);
         }
+    }
+
+    private void OnDestroy()
+    {
+        DOTween.Kill(transform);
     }
 }

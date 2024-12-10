@@ -18,13 +18,12 @@ public class Rifle : Weapon
 
     private void SpawnProjectile(float speed, float range, float damage, float armorPenetration, Owner owner)
     {
-        Projectile projectile = ProjectilePool.Instance.GetObject() as Projectile;
-
-        if (projectile != null)
+        DirectDamageProjectile directProjectile = PoolManager.Instance.GetObject("DirectDamageProjectile") as DirectDamageProjectile;
+        if (directProjectile != null)
         {
-            projectile.transform.position = firePoint.position;
-            projectile.transform.rotation = firePoint.rotation;
-            projectile.Initialize(speed, range, damage, armorPenetration, owner);
+            directProjectile.transform.position = firePoint.position;
+            directProjectile.transform.rotation = firePoint.rotation;
+            directProjectile.Initialize(speed, range, damage, armorPenetration, owner);
         }
     }
 }

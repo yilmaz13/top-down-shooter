@@ -1,28 +1,28 @@
 using UnityEngine;
-using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour,
-                               IDamageable 
+public class EnemyController : AgentController,
+                               IDamageable
 {
     #region Private Members
 
     [SerializeField] private Weapon _weapon;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _player;
-    [SerializeField] private float _chaseRange = 10f;
-    [SerializeField] private float _attackRange = 5f;
-    [SerializeField] private float _attackCooldown = 1f;
-    [SerializeField] private bool _isActive;
-    private float _lastAttackTime;
+    [SerializeField] private float _chaseRange;
+    [SerializeField] private float _attackRange;
+
+
+    private IEnemyListener _listener;
     private EnemyView _enemyView;
 
+    private Transform _patrolPathParent;
+    private int patrolIndex = 0;
+    private bool _hasPatrol;
+    private Vector3 _currentPatrol;
     #endregion
 
     #region Public Members
-
-    public HealthController HealthController;
-    public ArmorController ArmorController;
-
+    public EnemyView EnemyView => _enemyView;
     #endregion
 
     #region Unity Methods
@@ -35,6 +35,8 @@ public class EnemyController : MonoBehaviour,
 
     private void Update()
     {
+        if (_player == null) return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
         if (distanceToPlayer <= _attackRange)
@@ -49,74 +51,100 @@ public class EnemyController : MonoBehaviour,
         {
             Patrol();
         }
+
+        _enemyView?.TurnSlidersAtCamera();
     }
     #endregion
 
     #region Public Methods
-    public void Initialize(Transform player, EnemyView enemyView)
+    public void Initialize(IEnemyListener listener, EnemyView enemyView, Transform player,
+                           float speed, float health, float armor)
     {
         _enemyView = enemyView;
-         _player = player;
+        _player = player;
+        _listener = listener;
 
-        InitializeHealthAndArmorController(100, 0);
-        InitializeView();
+        base.Initialize(enemyView, speed, health, armor);
 
-        HealthController.OnDead += Dead;
+        GameEvents.OnPlayerDead += DestroyPlayer;
+        GameEvents.OnSpawnedPlayer += SpawnPlayer;
     }
-    public void ApplyDamage(float damage, float armorPenetration = 0)
-    {
-        TakeDamage(damage, armorPenetration);
-        _enemyView.UpdateHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _enemyView.UpdateArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
-    }
+
     #endregion
 
     #region Private Methods
     private void ChasePlayer()
     {
-        //_navMeshAgent.SetDestination(_player.position);
+        _enemyView.Move(_player.position);
+        _hasPatrol = false;
     }
 
     private void AttackPlayer()
     {
-       // _navMeshAgent.SetDestination(transform.position);
-        transform.LookAt(_player);
+        if (_player == null)
+            return;
 
-        if (Time.time >= _lastAttackTime + _attackCooldown)
+        _enemyView.LookAtPlayer(_player);
+
+        if (_weapon.CanShoot())
         {
-            _weapon.TryShoot(Owner.Enemy);
-            _lastAttackTime = Time.time;
+            _weapon.TryShoot(Owner.Enemy);           
         }
+
+        _hasPatrol = false;
     }
 
     private void Patrol()
     {
-    }
-    
-    private void InitializeView()
-    {
-        _enemyView.InitializeHealthBar(HealthController.Health, HealthController.MaxHealth);
-        _enemyView.InitializeArmorBar(ArmorController.Armor, ArmorController.MaxArmor);
+        if (!_hasPatrol)
+        {
+            patrolIndex = 0;
+            _currentPatrol = _patrolPathParent.GetChild(patrolIndex).position;
+            _hasPatrol = true;
+             _enemyView.Move(_currentPatrol);
+        }
+        else if ((Vector3.Distance(transform.position, _currentPatrol)) < 1.1f)
+        {
+            MoveNextPatrolPoint();
+        }
     }
    
-    private void InitializeHealthAndArmorController(float maxHealth, float maxArmor)
+    private void DestroyPlayer()
     {
-        HealthController = new HealthController();
-        ArmorController = new ArmorController();
-
-        HealthController.Initialize(maxHealth);
-        ArmorController.Initialize(maxArmor);
+        _player = null;
+    }
+    
+    private void SpawnPlayer(Transform transform)
+    {
+        _player = transform;
+    }
+    public void SetPatrolPoints(Transform patrolPathParent)
+    {
+        _patrolPathParent = patrolPathParent;
     }
 
-    private void TakeDamage(float damage, float armorPenetration)
+    public void MoveNextPatrolPoint()
     {
-        float remainingDamage = ArmorController.AbsorbDamage(damage, armorPenetration);
-        HealthController.TakeDamage(remainingDamage);
+        patrolIndex++;
+        if (_patrolPathParent.childCount <= patrolIndex)
+            patrolIndex = 0;
+
+        _currentPatrol = _patrolPathParent.GetChild(patrolIndex).position;        
+        _enemyView.Move(_currentPatrol);
     }
-    private void Dead()
+
+    protected override void OnDead()
     {
         _isActive = false;
-        _enemyView.Dead();
+        _listener.OnEnemyDead(this);
+        _enemyView.OnDead();
+        UnsubscribeHealthEvents();      
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnPlayerDead -= DestroyPlayer;
+        GameEvents.OnSpawnedPlayer -= SpawnPlayer;
     }
     #endregion
 }

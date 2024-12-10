@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ShooterGameController : IShooterGameViewListener,
-                                     IPlayerController
+                                     IPlayerController,
+                                     IEnemyListener
 {
     #region Private Members    
 
@@ -42,11 +43,15 @@ public class ShooterGameController : IShooterGameViewListener,
     private void SpawnPlayer()
     {
         GameObject playerObject = GameObject.Instantiate(_gameResources.PlayerPrefabs(), _view.PlayerSpawnPoint);
+
         var playerView = playerObject.GetComponent<PlayerView>();
+        playerView.Initialize(_gameResources.PlayerBaseSpeed, _camera,
+                              _gameResources.HealthSliderPrefabs(), _gameResources.ArmorSliderPrefabs());
+        _view.SetPlayerView(playerView);
 
         _playerController = playerObject.GetComponent<PlayerController>();
-        _playerController.Initialize(this, playerView, _gameResources.PlayerBaseSpeed);
-        playerView.Initialize(_gameResources.PlayerBaseSpeed, _camera);
+        _playerController.Initialize(this, playerView, _gameResources.PlayerBaseSpeed,
+                                     _gameResources.PlayerBaseHealth, _gameResources.PlayerBaseArmor);
 
         GameEvents.SpawnedPlayer(playerView.transform);
     }
@@ -59,9 +64,15 @@ public class ShooterGameController : IShooterGameViewListener,
 
             var enemyController = enemyObject.GetComponent<EnemyController>();
             var enemyView = enemyObject.GetComponent<EnemyView>();
-            enemyController.Initialize(playerTransform, enemyView);
+            enemyView.Initialize(_gameResources.EnemyBaseSpeed, _camera,
+                            _gameResources.HealthSliderPrefabs(), _gameResources.ArmorSliderPrefabs());
+            _view.AddEnemyViews(enemyView);
 
+            enemyController.Initialize(this, enemyView, playerTransform, _gameResources.EnemyBaseSpeed,
+                                       _gameResources.EnemyBaseHealth, _gameResources.EnemyBaseArmor);
             _enemyController.Add(enemyController);
+
+            enemyController.SetPatrolPoints(_view.EnemyPatrolPath[i]);
         }
     }
 
@@ -71,11 +82,13 @@ public class ShooterGameController : IShooterGameViewListener,
         foreach (var spawnPoint in _view.WeaponUpgradeSpawnPoints)
         {
             int randomIndex = Random.Range(0, weaponPrefabs.Count);
-            GameObject upgradeObject = GameObject.Instantiate(_gameResources.WeaponUpgradePrefabs(randomIndex), spawnPoint.position, spawnPoint.rotation);
-            
+            GameObject upgradeObject = GameObject.Instantiate(_gameResources.WeaponUpgradePrefabs(randomIndex), spawnPoint);
+            WeaponUpgradeCollectable weaponUpgradeCollectable = upgradeObject.GetComponent<WeaponUpgradeCollectable>();
+
+            _view.AddWeaponUpgradeViews(weaponUpgradeCollectable);
         }
     }
-
+  
     private void SubscribeEvents()
     {
         GameEvents.OnPlayerDead += PlayerDead;
@@ -109,13 +122,29 @@ public class ShooterGameController : IShooterGameViewListener,
 
     public void PlayerDead()
     {
-        DOVirtual.DelayedCall(1,
+        DOVirtual.DelayedCall(2,
            () => RespawnPlayer(_view.PlayerSpawnPoint.position));
     }
 
+    public void OnEnemyDead(EnemyController enemyController)
+    {
+        _enemyController.Remove(enemyController);
+        _view.RemoveEnemyViews(enemyController.EnemyView);
+    }
+    public void OnCollectableDestory(WeaponUpgradeCollectable weaponUpgradeCollectable)
+    {
+        _view.RemoveWeaponUpgradeViews(weaponUpgradeCollectable);
+    }
     public void RespawnPlayer(Vector3 spawnPosition)
     {
         _playerController.Respawn(spawnPosition);
+        GameEvents.SpawnedPlayer(_playerController.transform);
     }
+
+    public void OnDestory()
+    {
+        UnsubscribeEvents();
+    }
+
     #endregion
 }

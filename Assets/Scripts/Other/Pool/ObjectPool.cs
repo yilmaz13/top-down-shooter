@@ -1,54 +1,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> : IObjectPool<T> where T : MonoBehaviour, IPoolable
+public class ObjectPool<T> : IObjectPool<IPoolable> where T : MonoBehaviour, IPoolable
 {
-    private readonly Queue<T> _poolQueue = new Queue<T>();
     private readonly T _prefab;
-    private readonly int _initialSize;
     private readonly Transform _parent;
+    private readonly Stack<IPoolable> _pool;
 
     public ObjectPool(T prefab, int initialSize, Transform parent)
     {
         _prefab = prefab;
-        _initialSize = initialSize;
         _parent = parent;
+        _pool = new Stack<IPoolable>(initialSize);
 
-        InitializePool(parent);
-    }
-
-    private void InitializePool(Transform parent)
-    {
-        for (int i = 0; i < _initialSize; i++)
+        for (int i = 0; i < initialSize; i++)
         {
-            T obj = Object.Instantiate(_prefab);
-            obj.gameObject.SetActive(false);  
-            obj.transform.SetParent(parent);
-            _poolQueue.Enqueue(obj);
+            T obj = GameObject.Instantiate(_prefab, _parent);
+            obj.gameObject.SetActive(false);
+            _pool.Push(obj);
         }
     }
 
-    public T Get()
+    public IPoolable Get()
     {
-        if (_poolQueue.Count > 0)
+        if (_pool.Count > 0)
         {
-            T obj = _poolQueue.Dequeue();
-            obj.gameObject.SetActive(true);
+            IPoolable obj = _pool.Pop();
+            obj.SetActive(true);
             obj.OnSpawn();
             return obj;
         }
         else
         {
-            T obj = Object.Instantiate(_prefab);
+            T obj = GameObject.Instantiate(_prefab, _parent);
             obj.OnSpawn();
             return obj;
         }
     }
 
-    public void Return(T obj)
+    public void Return(IPoolable obj)
     {
         obj.OnDespawn();
-        obj.gameObject.SetActive(false);
-        _poolQueue.Enqueue(obj);
+        obj.SetActive(false);
+        _pool.Push(obj);
     }
 }

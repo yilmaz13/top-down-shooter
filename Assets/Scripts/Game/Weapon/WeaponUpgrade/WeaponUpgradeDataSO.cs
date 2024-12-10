@@ -5,4 +5,5 @@ public class WeaponUpgradeDataSO: ScriptableObject
 {
     public WeaponUpgradeType weaponUpgradeType;
     public float value;
+    public bool isUpdated;
 }

@@ -1,84 +1,55 @@
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
-public class Projectile : MonoBehaviour,
-                          IPoolable
+public abstract class Projectile : MonoBehaviour,
+                                   IPoolable
 {
-    private float _speed;
-    private float _range;
-    private float _damage;
-    private float _armorPenetration;
-    private float _areaOfEffect;
-    private Owner _owner;
-    private Vector3 _startPosition;
-    public void Initialize(float speed, float range, float damage, float armorPenetration, Owner owner, float areaOfEffect = 0)
+    protected float _speed;
+    protected float _range;
+    protected float _damage;
+    protected float _armorPenetration;
+    protected Owner _owner;
+    protected Vector3 _startPosition;
+    protected bool _isInitialized;
+
+    public void Initialize(float speed, float range, float damage, float armorPenetration, Owner owner)
     {
         _speed = speed;
         _range = range;
         _damage = damage;
         _armorPenetration = armorPenetration;
-        _areaOfEffect = areaOfEffect;
         _owner = owner;
         _startPosition = transform.position;
+        _isInitialized = true;
     }
 
-    void Update()
+    protected virtual void Update()
     {
+        if (!_isInitialized)
+            return;
+
         if (Vector3.Distance(_startPosition, transform.position) > _range)
         {
-            ProjectilePool.Instance.ReturnProjectile(this);
+            ReturnToPool();
         }
         else
         {
-            transform.Translate(Vector3.right * _speed * Time.deltaTime);
-        }
-    }  
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (_areaOfEffect > 0)
-        {
-            ApplyAreaDamage();
-        }
-        else
-        {
-            ApplyDirectDamage(other);
-        }
-
-        ReturnToPool();
-    }
-
-    private void ApplyAreaDamage()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _areaOfEffect);
-        foreach (Collider hit in colliders)
-        {
-            if (hit.TryGetComponent<IDamageable>(out IDamageable damageable))
-            {
-                damageable.ApplyDamage(_damage, _armorPenetration);
-            }
+            transform.Translate(Vector3.forward * _speed * Time.deltaTime);
         }
     }
 
-    private void ApplyDirectDamage(Collider other)
+    protected abstract void OnTriggerEnter(Collider other);
+
+    protected virtual void ReturnToPool()
     {
-        if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
-        {
-            damageable.ApplyDamage(_damage, _armorPenetration);
-        }
-    }
-    private void ReturnToPool()
-    {
-        ProjectilePool.Instance.ReturnProjectile(this);
+        _isInitialized = false;
     }
 
-    public void OnSpawn()
+    public void OnSpawn() { }
+
+    public void OnDespawn() { }
+
+    public void SetActive(bool active)
     {
-
-    }
-
-    public void OnDespawn()
-    {
-
+       gameObject.SetActive(active);
     }
 }

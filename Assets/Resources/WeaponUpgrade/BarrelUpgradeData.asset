@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponUpgradeType: 0
   value: 50
+  isUpdated: 0
