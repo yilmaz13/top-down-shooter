@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c78a90562011b04f87a7715ca06f7eb, type: 3}
   m_Name: BarrelUpgradeData
   m_EditorClassIdentifier: 
-  weaponUpgradeType: 2
+  weaponUpgradeType: 0
   value: 50
   isUpdated: 0

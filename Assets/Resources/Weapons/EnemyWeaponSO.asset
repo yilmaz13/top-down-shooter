@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 1
   _speed: 20
-  _damage: 100
+  _damage: 10
   _armorPenetration: 80
   _range: 5
   _fireRate: 1

@@ -16,8 +16,8 @@ MonoBehaviour:
   _speed: 50
   _damage: 100
   _armorPenetration: 100
-  _range: 8
-  _fireRate: 10
+  _range: 15
+  _fireRate: 3
   _areaOfEffect: 10
   _burstCount: 0
   _burstDelay: 0
