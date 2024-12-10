@@ -22,15 +22,12 @@ public class GamePlayGameState : AStateBase,
     private bool _startedGame;
 
     //Pool
-
-    private ProjectilePool _projectilePool;
-
     #endregion
 
     //  CONSTRUCTION
-    public GamePlayGameState(IStateManager      stateManager,
-                             IUserDataManager   userDataManager,   
-                             SceneReferences    sceneReferences,
+    public GamePlayGameState(IStateManager stateManager,
+                             IUserDataManager userDataManager,
+                             SceneReferences sceneReferences,
                              ResourceReferences resourceReferences) : base(StateNames.Game)
     {
         _stateManager = stateManager;
@@ -46,7 +43,7 @@ public class GamePlayGameState : AStateBase,
         Debug.Log("<color=green>GameplayGame State</color> OnActive");
 
         InitializeShooterGame();
-        
+
         _shooterGameView.Show();
 
         SubscribeEvents();
@@ -62,7 +59,7 @@ public class GamePlayGameState : AStateBase,
     }
 
     public override void UpdateState()
-    {        
+    {
     }
 
     #endregion
@@ -79,10 +76,7 @@ public class GamePlayGameState : AStateBase,
             InstantiateShooterController();
         }
 
-        if (_projectilePool == null)
-        {
-            InstantiateProjectilePool();
-        }
+        InstantiateProjectilePool();
     }
     private void InstantiateGameUI()
     {
@@ -105,15 +99,17 @@ public class GamePlayGameState : AStateBase,
 
     private void InstantiateProjectilePool()
     {
-        GameObject projectilePool = GameObject.Instantiate(_resourceReferences.ProjectilePoolPrefab, _sceneReferences.PoolContainer.transform);
-        _projectilePool = projectilePool.GetComponent<ProjectilePool>();
+        var directDamageProjectile = GameObject.Instantiate(_gameResources.DirectDamageProjectilePrefab());
+        var areaDamageProjectile = GameObject.Instantiate(_gameResources.AreaDamageProjectilePrefab());
+        PoolManager.Instance.CreatePool("DirectDamageProjectile", directDamageProjectile, 10);
+        PoolManager.Instance.CreatePool("AreaDamageProjectile", areaDamageProjectile, 10);
     }
 
     private void InitializeCamera()
     {
         _cameraController = _sceneReferences.MainCam.GetComponent<CameraController>();
-    } 
-    
+    }
+
     private void PlayLevel()
     {
         int index = _userDataManager.CurrentLevel();
@@ -123,17 +119,17 @@ public class GamePlayGameState : AStateBase,
         _level.CopyLevel(_level, currentLevelTemplate);
 
         _shooterController.Load(_level);
-        
+
         _startedGame = true;
 
         _gameUIView.LoadLevel(index);
-        _gameUIView.Show();        
+        _gameUIView.Show();
     }
     private void SubscribeEvents()
     {
         GameEvents.OnStartGame += StartGameListener;
-        GameEvents.OnEndGame += EndGameListener;    
-        GameEvents.OnClickGotoMenu += GotoMenu;      
+        GameEvents.OnEndGame += EndGameListener;
+        GameEvents.OnClickGotoMenu += GotoMenu;
 
         GameEvents.OnSpawnedPlayer += FollowCameraPlayer;
     }
@@ -143,11 +139,11 @@ public class GamePlayGameState : AStateBase,
         _shooterController.OnDestory();
 
         GameEvents.OnStartGame -= StartGameListener;
-        GameEvents.OnEndGame -= EndGameListener;     
-        GameEvents.OnClickGotoMenu -= GotoMenu;     
+        GameEvents.OnEndGame -= EndGameListener;
+        GameEvents.OnClickGotoMenu -= GotoMenu;
 
         GameEvents.OnSpawnedPlayer -= FollowCameraPlayer;
-       
+
     }
 
     private void ClearScene()
@@ -155,7 +151,7 @@ public class GamePlayGameState : AStateBase,
         _gameUIView.UnloadLevel();
         _gameUIView.Hide();
 
-        _shooterController.Unload();       
+        _shooterController.Unload();
     }
     private void GotoMenu()
     {

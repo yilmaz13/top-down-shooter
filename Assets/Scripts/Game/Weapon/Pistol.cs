@@ -1,4 +1,3 @@
-using Unity.Burst.CompilerServices;
 
 public class Pistol : Weapon
 {
@@ -7,14 +6,13 @@ public class Pistol : Weapon
         SpawnProjectile(weaponData.Speed, weaponData.Range, weaponData.Damage, weaponData.ArmorPenetration, owner);
     }
     private void SpawnProjectile(float speed, float range, float damage, float armorPenetration, Owner owner)
-    {     
-
-        Projectile projectile = ProjectilePool.Instance.GetObject() as Projectile;
-        if (projectile != null)
+    {
+        DirectDamageProjectile directProjectile = PoolManager.Instance.GetObject("DirectDamageProjectile") as DirectDamageProjectile;
+        if (directProjectile != null)
         {
-            projectile.transform.position = firePoint.position;
-            projectile.transform.rotation = firePoint.rotation;
-            projectile.Initialize(speed, range, damage, armorPenetration, owner);
+            directProjectile.transform.position = firePoint.position;
+            directProjectile.transform.rotation = firePoint.rotation;
+            directProjectile.Initialize(speed, range, damage, armorPenetration, owner);
         }
     }
 }   

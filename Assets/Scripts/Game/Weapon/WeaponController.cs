@@ -73,6 +73,11 @@ public class WeaponController : MonoBehaviour
     {
         return GetCurrentWeapon().HasUpgrade(upgradeData);
     }
+    
+    public bool IsUpgradeableCurrentWeapon(WeaponUpgradeData upgradeData)
+    {
+        return GetCurrentWeapon().IsUpgradeable(upgradeData);
+    }
 
     void OnDestroy()
     {

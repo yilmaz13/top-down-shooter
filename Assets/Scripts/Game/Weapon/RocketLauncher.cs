@@ -8,13 +8,12 @@ public class RocketLauncher : Weapon
 
     private void SpawnProjectile(float speed, float range, float damage, float armorPenetration, Owner owner, float areaOfEffect)
     {
-        Projectile projectile = ProjectilePool.Instance.GetObject() as Projectile;
-
-        if (projectile != null)
+        AreaDamageProjectile areaProjectile = PoolManager.Instance.GetObject("AreaDamageProjectile") as AreaDamageProjectile;
+        if (areaProjectile != null)
         {
-            projectile.transform.position = firePoint.position;
-            projectile.transform.rotation = firePoint.rotation;
-            projectile.Initialize(speed, range, damage, armorPenetration, owner, areaOfEffect);
+            areaProjectile.transform.position = firePoint.position;
+            areaProjectile.transform.rotation = firePoint.rotation;
+            areaProjectile.Initialize(speed, range, damage, armorPenetration, owner, areaOfEffect);
         }
     }
     

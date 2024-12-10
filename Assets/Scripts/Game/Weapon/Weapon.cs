@@ -65,6 +65,7 @@ public abstract class Weapon : MonoBehaviour
                 weaponData.Damage += upgradeData.value;
                 break;
         }
+
         _activeUpgrades.Add(upgradeData);
         return true;
     }
@@ -80,6 +81,21 @@ public abstract class Weapon : MonoBehaviour
             }
         }
 
+        return false;
+    } 
+    
+    public bool IsUpgradeable(WeaponUpgradeData upgradeData)
+    {
+        foreach (var upgrade in weaponData.Upgrades)
+        {
+            if (upgrade.weaponUpgradeType == upgradeData.weaponUpgradeType)
+            {
+                Debug.Log("Upgrade is available");
+                return true;
+            }
+        }
+
+        Debug.Log("Upgrade is not available");
         return false;
     }
 

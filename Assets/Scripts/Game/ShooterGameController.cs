@@ -88,7 +88,7 @@ public class ShooterGameController : IShooterGameViewListener,
             _view.AddWeaponUpgradeViews(weaponUpgradeCollectable);
         }
     }
-
+  
     private void SubscribeEvents()
     {
         GameEvents.OnPlayerDead += PlayerDead;

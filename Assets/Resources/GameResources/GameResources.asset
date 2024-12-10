@@ -31,3 +31,5 @@ MonoBehaviour:
   - {fileID: 2303728226712772708, guid: 2ede5d59638acdc4aa3dfa8e2041752f, type: 3}
   - {fileID: 2303728226712772708, guid: 22e68768f236b754cbe34e4838a74eb6, type: 3}
   - {fileID: 2303728226712772708, guid: cbe6e25aa4c3210468a1854a830b80a8, type: 3}
+  _directDamageProjectilePrefab: {fileID: 5040633750026901168, guid: 95831d069e125fe4295fda9ae26b5024, type: 3}
+  _areaDamageProjectilePrefab: {fileID: 5987400928146006764, guid: c5bf37f2fd6974e43af394d074c262e6, type: 3}

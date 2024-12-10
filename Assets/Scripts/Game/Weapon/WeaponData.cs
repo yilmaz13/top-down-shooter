@@ -49,7 +49,7 @@ public class WeaponData
 
         foreach (var upgrade in weaponDataSO.Upgrades)
         {
-            weaponUpgrades.Add(new WeaponUpgradeData(upgrade.weaponUpgradeType, upgrade.value));
+            weaponUpgrades.Add(new WeaponUpgradeData(upgrade.weaponUpgradeType, upgrade.value, upgrade.isUpdated));
         }
 
         Upgrades = weaponUpgrades;

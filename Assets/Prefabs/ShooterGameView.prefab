@@ -3168,6 +3168,10 @@ MonoBehaviour:
   _playerSpawnPoint: {fileID: 3879394680876807207}
   _enemySpawnPoints:
   - {fileID: 1115269504755718186}
+  - {fileID: 5516265065389997930}
+  - {fileID: 7477275347361784114}
+  - {fileID: 3246734088858937094}
+  - {fileID: 6159921659366691618}
   _weaponUpgradeSpawnPoints:
   - {fileID: 3670518674798723528}
   - {fileID: 2635717709221050513}

@@ -1,7 +1,4 @@
-using DG.Tweening;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class EnemyController : AgentController,
                                IDamageable
@@ -68,9 +65,6 @@ public class EnemyController : AgentController,
         _listener = listener;
 
         base.Initialize(enemyView, speed, health, armor);
-
-       // GameEvents.OnPlayerDead += PlayerDead;
-       GameEvents.OnSpawnedPlayer += SetPlayerTransform;
     }
 
     #endregion
@@ -111,16 +105,7 @@ public class EnemyController : AgentController,
             MoveNextPatrolPoint();
         }
     }
-
-    public void PlayerDead()
-    {
-        _player = null;
-    } 
-
-    public void SetPlayerTransform(Transform player)
-    {
-        _player = player;
-    }
+   
     public void SetPatrolPoints(Transform patrolPathParent)
     {
         _patrolPathParent = patrolPathParent;
@@ -141,16 +126,11 @@ public class EnemyController : AgentController,
         _isActive = false;
         _listener.OnEnemyDead(this);
         _enemyView.OnDead();
-        UnsubscribeHealthEvents();
-
-        GameEvents.OnPlayerDead -= PlayerDead;
-        GameEvents.OnSpawnedPlayer -= SetPlayerTransform;
+        UnsubscribeHealthEvents();      
     }
 
     private void OnDestroy()
-    {
-        GameEvents.OnPlayerDead -= PlayerDead;
-        GameEvents.OnSpawnedPlayer -= SetPlayerTransform;
+    {       
     }
     #endregion
 }

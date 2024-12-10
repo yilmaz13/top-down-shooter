@@ -24,6 +24,9 @@ public class GameResources : ScriptableObject
     [SerializeField] private GameObject _armorSliderPrefabs;
     [SerializeField] private List<GameObject> _weaponUpgradePrefabs;
 
+    [SerializeField] private DirectDamageProjectile _directDamageProjectilePrefab;
+    [SerializeField] private AreaDamageProjectile _areaDamageProjectilePrefab;
+
     public float FollowCameraSmootTime => _followCameraSmootTime;
     public float PlayerBaseSpeed => _playerBaseSpeed;
     public float PlayerBaseHealth => _playerBaseHealth;
@@ -67,5 +70,14 @@ public class GameResources : ScriptableObject
     public GameObject WeaponUpgradePrefabs(int weaponUpgradeIndex)
     {
         return _weaponUpgradePrefabs[weaponUpgradeIndex];
+    }
+
+    public DirectDamageProjectile DirectDamageProjectilePrefab()
+    {
+        return _directDamageProjectilePrefab;
+    }
+    public AreaDamageProjectile AreaDamageProjectilePrefab()
+    {
+        return _areaDamageProjectilePrefab;
     }
 }
