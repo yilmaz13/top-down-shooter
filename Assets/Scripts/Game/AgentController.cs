@@ -8,23 +8,26 @@ public abstract class AgentController : MonoBehaviour
     
     protected AgentView _view;
     protected bool _isActive;
-    protected float _playerBaseSpeed;
-
+    protected float _baseSpeed;
+    protected float _baseHealth;
+    protected float _baseArmor;
     #endregion
 
     #region Private Members
 
     public HealthController HealthController;
     public ArmorController ArmorController;
-    public float PlayerSpeed => _playerBaseSpeed;
+    public float Speed => _baseSpeed;
 
     #endregion
 
-    public void Initialize(AgentView view, float playerBaseSpeed, float health, float armor)
+    public void Initialize(AgentView view, float baseSpeed, float health, float armor)
     {
         _view = view;
+        _baseArmor = armor;
+        _baseHealth = health;
+        _baseSpeed = baseSpeed;
 
-        //TODO get value from game resources
         InitializeHealthAndArmorController(health, armor);
         SubscribeHealthEvents();
         InitializeView();
