@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour,
         }
         else
         {
-            transform.Translate(Vector3.right * _speed * Time.deltaTime);
+            transform.Translate(Vector3.forward * _speed * Time.deltaTime);
         }
     }  
 

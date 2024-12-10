@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class AgentView : MonoBehaviour
 {
+    [SerializeField] protected Transform _firePoint;
+    
     [SerializeField] protected Transform _healthSliderPoint;
     [SerializeField] protected Transform _armorSliderPoint;
     [SerializeField] protected Rigidbody _rigidbody;

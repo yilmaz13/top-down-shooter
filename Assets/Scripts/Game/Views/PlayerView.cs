@@ -4,24 +4,29 @@ public class PlayerView : AgentView
 {
     public void Move()
     {
-        Vector3 m_Input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        _rigidbody.MovePosition(transform.position + m_Input * Time.fixedDeltaTime * _speed);
-    }
+        Vector2 _inputVector = InputManager.Instance.InputVector;
+        Vector3 _moveVector = new Vector3(_inputVector.x, 0, _inputVector.y);
+
+        _rigidbody.MovePosition(transform.position + _moveVector * Time.fixedDeltaTime * _speed);
+    } 
 
     public void LookAtMouse()
     {
-        Vector2 playerScreenPosition = _camera.WorldToScreenPoint(transform.position);
-        Vector2 mouseScreenPosition = Input.mousePosition;
-        Vector2 directionToMouse = mouseScreenPosition - playerScreenPosition;
+        //memory için optimize edilebilir     
+        Plane playerPlane = new Plane(Vector3.up, transform.position);
+       
+        Ray ray = _camera.ScreenPointToRay(InputManager.Instance.MousePosition);
+        float hitDist = 0.0f;
 
-        Vector3 worldDirection = new Vector3(directionToMouse.x, 0, directionToMouse.y);
-        worldDirection = Quaternion.Euler(0, -90, 0) * worldDirection;
-
-        if (worldDirection != Vector3.zero)
+        if (playerPlane.Raycast(ray, out hitDist))
         {
-            Quaternion targetRotation = Quaternion.LookRotation(worldDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
+            Vector3 targetPoint = ray.GetPoint(hitDist);
+            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - _firePoint.position);
+            targetRotation.x = 0;
+            targetRotation.z = 0;
+
+            transform.rotation = Quaternion.Slerp(_firePoint.rotation, targetRotation, 10f * Time.deltaTime);
+        }        
     }
 
     public void Transfer(Vector3 vector3)

@@ -23,7 +23,7 @@ public class PlayerController : AgentController,
         base.Initialize(playerView, playerBaseSpeed, playerBaseHealth, playerBaseArmor);
     }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         if (!_isActive || _playerView == null)
             return;
@@ -52,7 +52,7 @@ public class PlayerController : AgentController,
     {
         _isActive = true;
         //TODO get value from game resources
-        InitializeHealthAndArmorController(100, 100);
+        InitializeHealthAndArmorController(_baseHealth, _baseArmor);
         SubscribeHealthEvents();
         
         UpdateViewBars();
@@ -60,9 +60,9 @@ public class PlayerController : AgentController,
         _playerView.ShowBars();
         _playerView.Transfer(spawnPosition);
         _playerView.Respawn();
-    }   
+    }
 
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         //double check 
         UnsubscribeHealthEvents();
