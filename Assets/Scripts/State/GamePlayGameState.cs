@@ -45,14 +45,12 @@ public class GamePlayGameState : AStateBase,
     {
         Debug.Log("<color=green>GameplayGame State</color> OnActive");
 
-        SpawnViewandControler();
+        InitializeShooterGame();
         
         _shooterGameView.Show();
 
         SubscribeEvents();
-
         InitializeCamera();
-
         PlayLevel();
     }
 
@@ -70,35 +68,52 @@ public class GamePlayGameState : AStateBase,
     #endregion
 
     #region Private Methos
-    private void SpawnViewandControler()
+
+    private void InitializeShooterGame()
     {
         _camera = _sceneReferences.MainCam;
         if (_shooterGameView == null)
         {
-            GameObject gameUIViewObject = GameObject.Instantiate(_resourceReferences.GameUIPrefab, _sceneReferences.UIViewContainer.transform);
-            _gameUIView = gameUIViewObject.GetComponent<GameUIView>();
-
-            _shooterController = new ShooterGameController();
-            GameObject mainMenuObject = GameObject.Instantiate(_resourceReferences.GameViewPrefab, _sceneReferences.ViewContainer.transform);
-
-            _shooterGameView = mainMenuObject.GetComponent<ShooterGameView>();
-            _shooterGameView.Initialize(_shooterController, Camera.main, _resourceReferences.GameResources);
-
-            _shooterController.Initialize(_shooterGameView, _gameUIView, this, _resourceReferences.GameResources, _camera);
+            InstantiateGameUI();
+            InstantiateShooterGameView();
+            InstantiateShooterController();
         }
 
         if (_projectilePool == null)
         {
-            GameObject projectilePool = GameObject.Instantiate(_resourceReferences.ProjectilePoolPrefab, _sceneReferences.PoolContainer.transform);
-            _projectilePool = projectilePool.GetComponent<ProjectilePool>();            
+            InstantiateProjectilePool();
         }
+    }
+    private void InstantiateGameUI()
+    {
+        GameObject gameUIViewObject = GameObject.Instantiate(_resourceReferences.GameUIPrefab, _sceneReferences.UIViewContainer.transform);
+        _gameUIView = gameUIViewObject.GetComponent<GameUIView>();
+    }
+
+    private void InstantiateShooterGameView()
+    {
+        GameObject mainMenuObject = GameObject.Instantiate(_resourceReferences.GameViewPrefab, _sceneReferences.ViewContainer.transform);
+        _shooterGameView = mainMenuObject.GetComponent<ShooterGameView>();
+        _shooterGameView.Initialize(_shooterController, Camera.main, _resourceReferences.GameResources);
+    }
+
+    private void InstantiateShooterController()
+    {
+        _shooterController = new ShooterGameController();
+        _shooterController.Initialize(_shooterGameView, _gameUIView, this, _resourceReferences.GameResources, _camera);
+    }
+
+    private void InstantiateProjectilePool()
+    {
+        GameObject projectilePool = GameObject.Instantiate(_resourceReferences.ProjectilePoolPrefab, _sceneReferences.PoolContainer.transform);
+        _projectilePool = projectilePool.GetComponent<ProjectilePool>();
     }
 
     private void InitializeCamera()
     {
-        _cameraController = _sceneReferences.MainCam.GetComponent<CameraController>();       
-    }    
-
+        _cameraController = _sceneReferences.MainCam.GetComponent<CameraController>();
+    } 
+    
     private void PlayLevel()
     {
         int index = _userDataManager.CurrentLevel();
@@ -137,7 +152,6 @@ public class GamePlayGameState : AStateBase,
 
     private void ClearScene()
     {
-        //Hide Popups;
         _gameUIView.UnloadLevel();
         _gameUIView.Hide();
 
@@ -154,15 +168,15 @@ public class GamePlayGameState : AStateBase,
         if (!_startedGame)
             return;
 
+        _startedGame = false;
+
         if (success)
         {
-            //LevelSuccess
-            _startedGame = false;
+            //LevelSuccess           
         }
         else
         {
-            //LevelFail
-            _startedGame = false;
+            //LevelFail           
         }
     }
 

@@ -50,7 +50,8 @@ public class ShooterGameController : IShooterGameViewListener,
         _view.SetPlayerView(playerView);
 
         _playerController = playerObject.GetComponent<PlayerController>();
-        _playerController.Initialize(this, playerView, _gameResources.PlayerBaseSpeed);        
+        _playerController.Initialize(this, playerView, _gameResources.PlayerBaseSpeed,
+                                     _gameResources.PlayerBaseHealth, _gameResources.PlayerBaseArmor);
 
         GameEvents.SpawnedPlayer(playerView.transform);
     }
@@ -67,7 +68,8 @@ public class ShooterGameController : IShooterGameViewListener,
                             _gameResources.HealthSliderPrefabs(), _gameResources.ArmorSliderPrefabs());
             _view.AddEnemyViews(enemyView);
 
-            enemyController.Initialize(playerTransform, enemyView, this);           
+            enemyController.Initialize(this, enemyView, playerTransform, _gameResources.EnemyBaseSpeed,
+                                       _gameResources.EnemyBaseHealth, _gameResources.EnemyBaseArmor);
             _enemyController.Add(enemyController);
         }
     }
@@ -80,7 +82,7 @@ public class ShooterGameController : IShooterGameViewListener,
             int randomIndex = Random.Range(0, weaponPrefabs.Count);
             GameObject upgradeObject = GameObject.Instantiate(_gameResources.WeaponUpgradePrefabs(randomIndex), spawnPoint);
             WeaponUpgradeCollectable weaponUpgradeCollectable = upgradeObject.GetComponent<WeaponUpgradeCollectable>();
-            
+
             _view.AddWeaponUpgradeViews(weaponUpgradeCollectable);
         }
     }
@@ -89,7 +91,7 @@ public class ShooterGameController : IShooterGameViewListener,
     {
         GameEvents.OnPlayerDead += PlayerDead;
     }
-  
+
     private void UnsubscribeEvents()
     {
         GameEvents.OnPlayerDead -= PlayerDead;
@@ -120,8 +122,8 @@ public class ShooterGameController : IShooterGameViewListener,
     {
         DOVirtual.DelayedCall(1,
            () => RespawnPlayer(_view.PlayerSpawnPoint.position));
-    } 
-    
+    }
+
     public void OnEnemyDead(EnemyController enemyController)
     {
         _enemyController.Remove(enemyController);

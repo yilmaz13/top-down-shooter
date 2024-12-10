@@ -4,11 +4,11 @@ public abstract class AgentView : MonoBehaviour
 {
     [SerializeField] protected Transform _healthSliderPoint;
     [SerializeField] protected Transform _armorSliderPoint;
-    [SerializeField] protected Camera _camera;
     [SerializeField] protected Rigidbody _rigidbody;
 
     protected GameObject _healthSliderPrefabs;
     protected GameObject _armorSliderPrefabs;
+    protected Camera _camera;
 
     protected SliderView healthView;
     protected SliderView armorView;

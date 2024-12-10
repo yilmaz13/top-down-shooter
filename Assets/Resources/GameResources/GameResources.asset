@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followCameraSmootTime: 0.2
   _playerBaseSpeed: 5
-  _enemyBaseSpeed: 0
+  _playerBaseHealth: 100
+  _playerBaseArmor: 100
+  _enemyBaseSpeed: 100
+  _enemyBaseHealth: 100
+  _enemyBaseArmor: 0
   _weaponList:
   - {fileID: 8830720262758566732, guid: f0327a84428c1cb4b82338d00463fe13, type: 3}
   - {fileID: 8286333083908733332, guid: 1b4bab68d91e94c45a71cfa2d55f1298, type: 3}
